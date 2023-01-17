@@ -35,28 +35,28 @@ const char BuildDateTime[] = __DATE__ " " __TIME__;
 const char BuildDateTime[] = "2004 04 26 11:20";
 #else
 const char BuildDateTime[] = "2004 07 20 09:30";
-#endif //REVISION
-#endif //MODERN
+#endif // REVISION
+#endif // MODERN
 
 const IntrFunc gIntrTableTemplate[] =
-{
-    VCountIntr, // V-count interrupt
-    SerialIntr, // Serial interrupt
-    Timer3Intr, // Timer 3 interrupt
-    HBlankIntr, // H-blank interrupt
-    VBlankIntr, // V-blank interrupt
-    IntrDummy,  // Timer 0 interrupt
-    IntrDummy,  // Timer 1 interrupt
-    IntrDummy,  // Timer 2 interrupt
-    IntrDummy,  // DMA 0 interrupt
-    IntrDummy,  // DMA 1 interrupt
-    IntrDummy,  // DMA 2 interrupt
-    IntrDummy,  // DMA 3 interrupt
-    IntrDummy,  // Key interrupt
-    IntrDummy,  // Game Pak interrupt
+    {
+        VCountIntr, // V-count interrupt
+        SerialIntr, // Serial interrupt
+        Timer3Intr, // Timer 3 interrupt
+        HBlankIntr, // H-blank interrupt
+        VBlankIntr, // V-blank interrupt
+        IntrDummy,  // Timer 0 interrupt
+        IntrDummy,  // Timer 1 interrupt
+        IntrDummy,  // Timer 2 interrupt
+        IntrDummy,  // DMA 0 interrupt
+        IntrDummy,  // DMA 1 interrupt
+        IntrDummy,  // DMA 2 interrupt
+        IntrDummy,  // DMA 3 interrupt
+        IntrDummy,  // Key interrupt
+        IntrDummy,  // Game Pak interrupt
 };
 
-#define INTR_COUNT ((int)(sizeof(gIntrTableTemplate)/sizeof(IntrFunc)))
+#define INTR_COUNT ((int)(sizeof(gIntrTableTemplate) / sizeof(IntrFunc)))
 
 u16 gKeyRepeatStartDelay;
 u8 gLinkTransferringData;
@@ -77,7 +77,7 @@ u8 sVcountAtIntr;
 u8 sVcountBeforeSound;
 #endif
 
-static IntrFunc * const sTimerIntrFunc = gIntrTable + 0x7;
+static IntrFunc *const sTimerIntrFunc = gIntrTable + 0x7;
 
 EWRAM_DATA u8 gDecompressionBuffer[0x4000] = {0};
 EWRAM_DATA u16 gTrainerId = 0;
@@ -120,11 +120,10 @@ void AgbMain()
         "\tbcc\t.LCU%=\n"
         :
         :
-        : "r0", "r1", "r2", "r3", "r4", "r5", "memory"
-    );
+        : "r0", "r1", "r2", "r3", "r4", "r5", "memory");
 #else
     RegisterRamReset(RESET_ALL);
-#endif //MODERN
+#endif // MODERN
     *(vu16 *)BG_PLTT = RGB_WHITE;
     InitGpuRegManager();
     REG_WAITCNT = WAITCNT_PREFETCH_ENABLE | WAITCNT_WS0_S_1 | WAITCNT_WS0_N_3;
@@ -147,6 +146,7 @@ void AgbMain()
     SetNotInSaveFailedScreen();
 
     AGBPrintInit();
+    AGBPrintf("%S", "Pokemon boot hi! \n");
 
 #if REVISION == 1
     if (gFlashMemoryPresent != TRUE)
@@ -159,9 +159,7 @@ void AgbMain()
     {
         ReadKeys();
 
-        if (gSoftResetDisabled == FALSE
-         && (gMain.heldKeysRaw & A_BUTTON)
-         && (gMain.heldKeysRaw & B_START_SELECT) == B_START_SELECT)
+        if (gSoftResetDisabled == FALSE && (gMain.heldKeysRaw & A_BUTTON) && (gMain.heldKeysRaw & B_START_SELECT) == B_START_SELECT)
         {
             rfu_REQ_stopMode();
             rfu_waitREQComplete();
@@ -432,7 +430,8 @@ void RestoreSerialTimer3IntrHandlers(void)
 }
 
 static void IntrDummy(void)
-{}
+{
+}
 
 static void WaitForVBlank(void)
 {

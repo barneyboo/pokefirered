@@ -3,7 +3,7 @@ const u8 gSpeciesNames[][11] = {
     _("BULBASAUR"),
     _("IVYSAUR"),
     _("VENUSAUR"),
-    _("CHARMANDER"),
+    _("CHAPMANDER"), // charmander
     _("CHARMELEON"),
     _("CHARIZARD"),
     _("SQUIRTLE"),
@@ -15,7 +15,7 @@ const u8 gSpeciesNames[][11] = {
     _("WEEDLE"),
     _("KAKUNA"),
     _("BEEDRILL"),
-    _("PIDGEY"),
+    _("PIDGE"), // pidgey
     _("PIDGEOTTO"),
     _("PIDGEOT"),
     _("RATTATA"),
@@ -24,7 +24,7 @@ const u8 gSpeciesNames[][11] = {
     _("FEAROW"),
     _("EKANS"),
     _("ARBOK"),
-    _("PIKACHU"),
+    _("BLARGH"), // pikachu
     _("RAICHU"),
     _("SANDSHREW"),
     _("SANDSLASH"),
@@ -32,7 +32,7 @@ const u8 gSpeciesNames[][11] = {
     _("NIDORINA"),
     _("NIDOQUEEN"),
     _("NIDORAN♂"),
-    _("NIDORINO"),
+    _("NEALDORINO"), // nidorino
     _("NIDOKING"),
     _("CLEFAIRY"),
     _("CLEFABLE"),
@@ -40,7 +40,7 @@ const u8 gSpeciesNames[][11] = {
     _("NINETALES"),
     _("JIGGLYPUFF"),
     _("WIGGLYTUFF"),
-    _("ZUBAT"),
+    _("BATMAN"), // zubat
     _("GOLBAT"),
     _("ODDISH"),
     _("GLOOM"),
@@ -53,7 +53,7 @@ const u8 gSpeciesNames[][11] = {
     _("DUGTRIO"),
     _("MEOWTH"),
     _("PERSIAN"),
-    _("PSYDUCK"),
+    _("RUTH"), // psyduck
     _("GOLDUCK"),
     _("MANKEY"),
     _("PRIMEAPE"),
@@ -132,9 +132,9 @@ const u8 gSpeciesNames[][11] = {
     _("GYARADOS"),
     _("LAPRAS"),
     _("DITTO"),
-    _("EEVEE"),
+    _("CJ"), // eevee
     _("VAPOREON"),
-    _("JOLTEON"),
+    _("JAUNTEON"), // jolteon
     _("FLAREON"),
     _("PORYGON"),
     _("OMANYTE"),
@@ -410,5 +410,4 @@ const u8 gSpeciesNames[][11] = {
     _("LATIOS"),
     _("JIRACHI"),
     _("DEOXYS"),
-    _("CHIMECHO")
-};
+    _("CHIMECHO")};

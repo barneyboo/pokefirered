@@ -107,6 +107,17 @@ void ResetMenuAndMonGlobals(void)
 void NewGameInitData(void)
 {
     u8 rivalName[PLAYER_NAME_LENGTH + 1];
+    // struct WildPokemon initialWildPokemon[] = {
+    //     {25, 25, SPECIES_PIKACHU}};
+    // struct DynamicWildPokemonInfo initialPokemonInfo = {7, initialWildPokemon};
+    // struct DynamicWildPokemonHeader initialPokemonHeader = {
+    //     .mapGroup = MAP_GROUP(ROUTE1),
+    //     .mapNum = MAP_NUM(ROUTE1),
+    //     .landMonsInfo = &initialPokemonInfo,
+    //     .waterMonsInfo = NULL,
+    //     .rockSmashMonsInfo = NULL,
+    //     .fishingMonsInfo = NULL,
+    // };
 
     StringCopy(rivalName, gSaveBlock1Ptr->rivalName);
     gDifferentSaveFile = TRUE;
@@ -149,6 +160,8 @@ void NewGameInitData(void)
     RunScriptImmediately(EventScript_ResetAllMapFlags);
     StringCopy(gSaveBlock1Ptr->rivalName, rivalName);
     ResetTrainerTowerResults();
+
+    // dynamicWildMonHeaders[0] = initialPokemonHeader;
 }
 
 static void ResetMiniGamesResults(void)
