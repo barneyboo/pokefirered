@@ -276,7 +276,7 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *info, u8 area, u8 
     u8 dynamicSlot;
     struct DynamicWildPokemonHeader dynWildPokemonHeader;
     struct WildPokemon *dynWildPokemon;
-    AGBPrintf("Choosing wild mon!");
+    DebugPrintf("Choosing wild mon");
     switch (area)
     {
     case WILD_AREA_LAND:
