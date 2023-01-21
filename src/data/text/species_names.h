@@ -305,7 +305,7 @@ const u8 gSpeciesNames[][11] = {
     _("SHEDINJA"),
     _("TAILLOW"),
     _("SWELLOW"),
-    _("SHROOMISH"),
+    _("ROOMISH"),
     _("BRELOOM"),
     _("SPINDA"),
     _("WINGULL"),
