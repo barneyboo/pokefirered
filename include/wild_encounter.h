@@ -48,11 +48,11 @@ struct DynamicWildPokemonHeader
     struct WildPokemon *wildPokemon[7];
 };
 
-extern struct DynamicWildPokemonHeader dynamicWildMonHeaders[20];
+extern struct DynamicWildPokemonHeader dynamicWildMonHeaders[15];
 // extern struct DynamicWildPokemonInfo dynamicWildPokemonInfo[50];
 
 //!!! Experiment with using AGBPrint for debug logging!
-extern struct WildPokemon dynamicWildPokemon[90];
+extern struct WildPokemon dynamicWildPokemon[105];
 
 void DisableWildEncounters(bool8 disabled);
 bool8 StandardWildEncounter(u32 currMetatileAttrs, u16 previousMetaTileBehavior);

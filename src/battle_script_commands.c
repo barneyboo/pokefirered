@@ -9307,10 +9307,11 @@ static void UpdateWildMapSlot(void)
     u16 headerId = GetCurrentMapWildMonHeaderId();
     u16 speciesEncounterType = -1;
     u8 i = 0;
+    u16 newMonId = 0;
 
     // for testing: use symbol sRoute1_FireRed_LandMons
     // at 0x083C8EE0
-    u16 dynamicHeaderId = headerId % 20;
+    u16 dynamicHeaderId = headerId % 15;
 
     struct WildPokemonHeader sourceWildHeader = gWildMonHeaders[headerId];
 
@@ -9375,7 +9376,12 @@ static void UpdateWildMapSlot(void)
     newWildPokemon = &dynamicWildPokemon[dynamicMonId];
     newWildPokemon->minLevel = newMinLevel;
     newWildPokemon->maxLevel = newMaxLevel;
-    newWildPokemon->species = Random() % 412;
+    do
+    {
+        newMonId = (Random() % 411) + 1;
+    } while (newMonId > 251 && newMonId < 277);
+
+    newWildPokemon->species = newMonId;
     DebugPrintf("Assigned new dynamic pokemon of species %d", newWildPokemon->species);
     DebugPrintf("Assigned to header %d, slot %d", dynamicHeaderId, slotToOverwrite);
 

@@ -31,8 +31,8 @@ static EWRAM_DATA struct WildEncounterData sWildEncounterData = {};
 static EWRAM_DATA bool8 sWildEncountersDisabled = FALSE;
 
 // dynamic wild encounter tables only use 6 slots to save space
-EWRAM_DATA struct WildPokemon dynamicWildPokemon[90] = {0};
-EWRAM_DATA struct DynamicWildPokemonHeader dynamicWildMonHeaders[20] = {0};
+EWRAM_DATA struct WildPokemon dynamicWildPokemon[105] = {0};
+EWRAM_DATA struct DynamicWildPokemonHeader dynamicWildMonHeaders[15] = {0};
 // EWRAM_DATA struct DynamicWildPokemonInfo dynamicWildPokemonInfo[35] = {0};
 // store dynamic encounter tables for up to 50 maps
 // if this is full, randomly overwrite existing maps
@@ -298,14 +298,14 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *info, u8 area, u8 
     // try to inject a dynamic pokemon if one is defined
     slotSpecies = info->wildPokemon[slot].species;
     headerId = GetCurrentMapWildMonHeaderId();
-    dynamicHeaderId = headerId % 20;
+    dynamicHeaderId = headerId % 15;
     dynamicSlot = slot % 7;
     DebugPrintf("Looking for mon at header %d, slot %d", dynamicHeaderId, dynamicSlot);
     dynWildPokemonHeader = &dynamicWildMonHeaders[dynamicHeaderId];
     DebugPrintf("Pointing to dynamic header at %d", &dynWildPokemonHeader);
     if (dynWildPokemonHeader->wildPokemon != 0)
     {
-        DebugPrintf("Dynamic mon found for header %d, slot %d", dynamicHeaderId, dynamicSlot);
+        // DebugPrintf("Dynamic mon found for header %d, slot %d", dynamicHeaderId, dynamicSlot);
         dynWildPokemon = dynWildPokemonHeader->wildPokemon[dynamicSlot];
         if (dynWildPokemon != NULL)
         {

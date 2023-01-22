@@ -1,39 +1,21 @@
-# Pokémon FireRed and LeafGreen
+# Pokémon PikaRoo
 
-[![Build Status][travis-badge]][travis]
+This is a modified disassembly of Pokémon FireRed and LeafGreen, forked from `https://github.com/pret/pokefirered`.
 
-[travis]: https://travis-ci.org/pret/pokefirered
-[travis-badge]: https://travis-ci.org/pret/pokefirered.svg?branch=master
+Includes the following changes:
 
-This is a disassembly of Pokémon FireRed and LeafGreen.
+- Some Pokémon renamed
+- Small amount of money earned after winning a battle
+- Randomised wild Pokémon spawns (see notes below for limitations)
+- Logging handler ported from https://github.com/pret/pokeemerald
 
-It builds the following ROMs:
+## Dynamic Spawns
 
-* [**pokefirered.gba**](https://datomatic.no-intro.org/?page=show_record&s=23&n=1616) `sha1: 41cb23d8dccc8ebd7c649cd8fbb58eeace6e2fdc`
-* [**pokeleafgreen.gba**](https://datomatic.no-intro.org/?page=show_record&s=23&n=1617) `sha1: 574fa542ffebb14be69902d1d36f1ec0a4afd71e`
-* [**pokefirered_rev1.gba**](https://datomatic.no-intro.org/?page=show_record&s=23&n=1672) `sha1: dd5945db9b930750cb39d00c84da8571feebf417`
-* [**pokeleafgreen_rev1.gba**](https://datomatic.no-intro.org/index.php?page=show_record&s=23&n=1668) `sha1: 7862c67bdecbe21d1d69ce082ce34327e1c6ed5e`
+After catching a Pokémon in the wild, its slot in the encounter table for that map will be replaced with a random Pokémon. The levels for that encounter will be incremented by one. There are some limitations on how this works at the moment:
 
-To set up the repository, see [INSTALL.md](INSTALL.md).
+- Only seven dynamic slots for land encounters per map (instead of 12).
+- Until all seven dynamic slots for a map have been filled, all 12 original slots can spawn in battle.
+- Unique dynamic spawn tables for 15 maps are stored. Therefore, some maps share dynamic spawn tables.
+- Only land encounters are supported so far.
 
-
-## See also
-
-Other disassembly and/or decompilation projects:
-* [**Pokémon Red and Blue**](https://github.com/pret/pokered)
-* [**Pokémon Gold and Silver (Space World '97 demo)**](https://github.com/pret/pokegold-spaceworld)
-* [**Pokémon Yellow**](https://github.com/pret/pokeyellow)
-* [**Pokémon Trading Card Game**](https://github.com/pret/poketcg)
-* [**Pokémon Pinball**](https://github.com/pret/pokepinball)
-* [**Pokémon Stadium**](https://github.com/pret/pokestadium)
-* [**Pokémon Gold and Silver**](https://github.com/pret/pokegold)
-* [**Pokémon Crystal**](https://github.com/pret/pokecrystal)
-* [**Pokémon Ruby and Sapphire**](https://github.com/pret/pokeruby)
-* [**Pokémon Pinball: Ruby & Sapphire**](https://github.com/pret/pokepinballrs)
-* [**Pokémon Emerald**](https://github.com/pret/pokeemerald)
-* [**Pokémon Mystery Dungeon: Red Rescue Team**](https://github.com/pret/pmd-red)
-
-
-## Contacts
-
-You can find us on [Discord](https://discord.gg/d5dubZ3) and [IRC](https://web.libera.chat/?#pret).
+⚠️ This still a work in progress. Support for more dynamic encounter tables, slots per map, and non-land encounters is on the way. Also some ways to try and balance things so you can't build a dream team on Route 1.
