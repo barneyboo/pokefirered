@@ -1,6 +1,6 @@
 # Pokémon PikaRoo
 
-This is a modified disassembly of Pokémon FireRed and LeafGreen, forked from `https://github.com/pret/pokefirered`.
+This is a modified disassembly of Pokémon FireRed and LeafGreen, forked from https://github.com/pret/pokefirered.
 
 Includes the following changes:
 
