@@ -45,6 +45,7 @@ u8 RunHelpSystemCallback(void)
     {
     case 0:
         sInHelpSystem = 0;
+        return 0;
         if (gSaveBlock2Ptr->optionsButtonMode != OPTIONS_BUTTON_MODE_HELP)
             return 0;
         if (JOY_NEW(R_BUTTON) && gHelpSystemToggleWithRButtonDisabled == TRUE)
@@ -138,7 +139,7 @@ u8 RunHelpSystemCallback(void)
 
 void SaveCallbacks(void)
 {
-    vu16 * dma;
+    vu16 *dma;
     sVideoState.savedVblankCb = gMain.vblankCallback;
     sVideoState.savedHblankCb = gMain.hblankCallback;
     gMain.vblankCallback = NULL;
@@ -169,8 +170,7 @@ void SaveMapTextColors(void)
     SaveTextColors(
         &sVideoState.savedTextColor[0],
         &sVideoState.savedTextColor[1],
-        &sVideoState.savedTextColor[2]
-    );
+        &sVideoState.savedTextColor[2]);
 }
 
 void RestoreCallbacks(void)
@@ -198,8 +198,7 @@ void RestoreMapTextColors(void)
     RestoreTextColors(
         &sVideoState.savedTextColor[0],
         &sVideoState.savedTextColor[1],
-        &sVideoState.savedTextColor[2]
-    );
+        &sVideoState.savedTextColor[2]);
 }
 
 void CommitTilemap(void)
@@ -300,11 +299,11 @@ void HS_ShowOrHideHeaderAndFooterLines_Lighter(u8 mode)
     switch (mode)
     {
     case 0:
-        HS_DrawBgTilemapRect(0x1FF, 1,  2, 28, 1, 0);
+        HS_DrawBgTilemapRect(0x1FF, 1, 2, 28, 1, 0);
         HS_DrawBgTilemapRect(0x1FF, 1, 19, 28, 1, 0);
         break;
     case 1:
-        HS_DrawBgTilemapRect(0x1F7, 1,  2, 28, 1, 0);
+        HS_DrawBgTilemapRect(0x1F7, 1, 2, 28, 1, 0);
         HS_DrawBgTilemapRect(0x1F8, 1, 19, 28, 1, 0);
         break;
     }
@@ -315,11 +314,11 @@ void HS_ShowOrHideHeaderAndFooterLines_Darker(u8 mode)
     switch (mode)
     {
     case 0:
-        HS_DrawBgTilemapRect(0x1FF, 1,  2, 28, 1, 0);
+        HS_DrawBgTilemapRect(0x1FF, 1, 2, 28, 1, 0);
         HS_DrawBgTilemapRect(0x1FF, 1, 19, 28, 1, 0);
         break;
     case 1:
-        HS_DrawBgTilemapRect(0x1FB, 1,  2, 28, 1, 0);
+        HS_DrawBgTilemapRect(0x1FB, 1, 2, 28, 1, 0);
         HS_DrawBgTilemapRect(0x1FC, 1, 19, 28, 1, 0);
         break;
     }
@@ -330,11 +329,11 @@ void HS_ShowOrHideVerticalBlackBarsAlongSides(u8 mode)
     switch (mode)
     {
     case 0:
-        HS_DrawBgTilemapRect(0x1FF,  0, 0, 1, 20, 0);
+        HS_DrawBgTilemapRect(0x1FF, 0, 0, 1, 20, 0);
         HS_DrawBgTilemapRect(0x1FF, 29, 0, 1, 20, 0);
         break;
     case 1:
-        HS_DrawBgTilemapRect(0x1F9,  0, 0, 1, 20, 0);
+        HS_DrawBgTilemapRect(0x1F9, 0, 0, 1, 20, 0);
         HS_DrawBgTilemapRect(0x1F9, 29, 0, 1, 20, 0);
         break;
     }
@@ -358,19 +357,19 @@ void HS_ShowOrHideScrollArrows(u8 which, u8 mode)
     switch (mode)
     {
     case 0:
-        HS_DrawBgTilemapRect(0x1FF, 28,  3, 1, 1, 0);
+        HS_DrawBgTilemapRect(0x1FF, 28, 3, 1, 1, 0);
         HS_DrawBgTilemapRect(0x1FF, 28, 18, 1, 1, 0);
         break;
     case 1:
         if (which == 0) // top
-            HS_DrawBgTilemapRect(0x1FE, 28,  3, 1, 1, 0);
+            HS_DrawBgTilemapRect(0x1FE, 28, 3, 1, 1, 0);
         else // bottom
             HS_DrawBgTilemapRect(0x1FD, 28, 18, 1, 1, 0);
         break;
     }
 }
 
-void HelpSystemRenderText(u8 fontId, u8 * dest, const u8 * src, u8 x, u8 y, u8 width, u8 height)
+void HelpSystemRenderText(u8 fontId, u8 *dest, const u8 *src, u8 x, u8 y, u8 width, u8 height)
 {
     // fontId -> sp+24
     // dest -> sp+28
@@ -422,7 +421,7 @@ void HelpSystemRenderText(u8 fontId, u8 * dest, const u8 * src, u8 x, u8 y, u8 w
             }
             else if (curChar == PLACEHOLDER_ID_STRING_VAR_1)
             {
-                for (i = 0; ; i++)
+                for (i = 0;; i++)
                 {
                     if (FlagGet(FLAG_SYS_NOT_SOMEONES_PC) == TRUE)
                     {
@@ -463,11 +462,11 @@ void HelpSystemRenderText(u8 fontId, u8 * dest, const u8 * src, u8 x, u8 y, u8 w
             {
             case EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW:
                 src++;
-                //fallthrough
+                // fallthrough
             case EXT_CTRL_CODE_PLAY_BGM:
             case EXT_CTRL_CODE_PLAY_SE:
                 src++;
-                //fallthrough
+                // fallthrough
             case EXT_CTRL_CODE_COLOR:
             case EXT_CTRL_CODE_HIGHLIGHT:
             case EXT_CTRL_CODE_SHADOW:
@@ -525,7 +524,7 @@ void HelpSystemRenderText(u8 fontId, u8 * dest, const u8 * src, u8 x, u8 y, u8 w
         case CHAR_EXTRA_SYMBOL:
             curChar = *src + 0x100;
             src++;
-            //fallthrough
+            // fallthrough
         default:
             if (curChar == CHAR_SPACE)
             {
@@ -572,26 +571,26 @@ void DecompressAndRenderGlyph(u8 fontId, u16 glyph, struct Bitmap *srcBlit, stru
     BlitBitmapRect4Bit(srcBlit, destBlit, 0, 0, x, y, gGlyphInfo.width, gGlyphInfo.height, 0);
 }
 
-void HelpSystem_PrintTextInTopLeftCorner(const u8 * str)
+void HelpSystem_PrintTextInTopLeftCorner(const u8 *str)
 {
     GenerateFontHalfRowLookupTable(TEXT_COLOR_WHITE, TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_DARK_GRAY);
     HelpSystemRenderText(5, gDecompressionBuffer + 0x3D00, str, 6, 2, 7, 2);
 }
 
-void HelpSystem_PrintTextRightAlign_Row52(const u8 * str)
+void HelpSystem_PrintTextRightAlign_Row52(const u8 *str)
 {
     s32 left = 0x7C - GetStringWidth(FONT_SMALL, str, 0);
     GenerateFontHalfRowLookupTable(TEXT_COLOR_WHITE, TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_DARK_GRAY);
     HelpSystemRenderText(0, gDecompressionBuffer + 0x3400, str, left, 2, 16, 2);
 }
 
-void HelpSystem_PrintTextAt(const u8 * str, u8 x, u8 y)
+void HelpSystem_PrintTextAt(const u8 *str, u8 x, u8 y)
 {
     GenerateFontHalfRowLookupTable(TEXT_COLOR_WHITE, TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_DARK_GRAY);
     HelpSystemRenderText(2, gDecompressionBuffer + 0x0000, str, x, y, 26, 16);
 }
 
-void HelpSystem_PrintQuestionAndAnswerPair(const u8 * question, const u8 * answer)
+void HelpSystem_PrintQuestionAndAnswerPair(const u8 *question, const u8 *answer)
 {
     CpuFill16(0xEEEE, gDecompressionBuffer + 0x0000, 0x3400);
     GenerateFontHalfRowLookupTable(TEXT_COLOR_WHITE, TEXT_DYNAMIC_COLOR_5, TEXT_COLOR_DARK_GRAY);
@@ -599,7 +598,7 @@ void HelpSystem_PrintQuestionAndAnswerPair(const u8 * question, const u8 * answe
     HelpSystemRenderText(2, gDecompressionBuffer + 0x09C0, answer, 0, 0, 26, 13);
 }
 
-void HelpSystem_PrintTopicMouseoverDescription(const u8 * str)
+void HelpSystem_PrintTopicMouseoverDescription(const u8 *str)
 {
     CpuFill16(0x1111, gDecompressionBuffer + 0x23C0, 0x1040);
     GenerateFontHalfRowLookupTable(TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
@@ -621,7 +620,7 @@ void HelpSystem_FillPanel1(void)
     CpuFill16(0xFFFF, gDecompressionBuffer + 0x0000, 0x3400);
 }
 
-void HelpSystem_InitListMenuController(struct HelpSystemListMenu * a0, u8 a1, u8 a2)
+void HelpSystem_InitListMenuController(struct HelpSystemListMenu *a0, u8 a1, u8 a2)
 {
     gHelpSystemListMenu.sub = a0->sub;
     gHelpSystemListMenu.itemsAbove = a1;

@@ -2805,7 +2805,7 @@ static void Cmd_tryfaintmon(void)
                     gBattleResults.opponentFaintCounter++;
                 gBattleResults.lastOpponentSpecies = GetMonData(&gEnemyParty[gBattlerPartyIndexes[gActiveBattler]], MON_DATA_SPECIES);
                 *(u8 *)(&gBattleStruct->field_182) = gBattlerAttacker;
-                battleMoneyReward = gBattleMons[0].level * 5;
+                battleMoneyReward = gBattleMons[0].level * 2;
                 AddMoney(&gSaveBlock1Ptr->money, battleMoneyReward);
             }
             if ((gHitMarker & HITMARKER_DESTINYBOND) && gBattleMons[gBattlerAttacker].hp != 0)
