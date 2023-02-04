@@ -9301,92 +9301,92 @@ static void Cmd_handleballthrow(void)
     }
 }
 
-static void UpdateWildMapSlot(void)
-{
-    u16 caughtMonSpecies = gBattleResults.caughtMonSpecies;
-    u16 headerId = GetCurrentMapWildMonHeaderId();
-    u16 speciesEncounterType = -1;
-    u8 i = 0;
-    u16 newMonId = 0;
+// static void UpdateWildMapSlot(void)
+// {
+//     u16 caughtMonSpecies = gBattleResults.caughtMonSpecies;
+//     u16 headerId = GetCurrentMapWildMonHeaderId();
+//     u16 speciesEncounterType = -1;
+//     u8 i = 0;
+//     u16 newMonId = 0;
 
-    // for testing: use symbol sRoute1_FireRed_LandMons
-    // at 0x083C8EE0
-    u16 dynamicHeaderId = headerId % 15;
+//     // for testing: use symbol sRoute1_FireRed_LandMons
+//     // at 0x083C8EE0
+//     u16 dynamicHeaderId = headerId % 15;
 
-    struct WildPokemonHeader sourceWildHeader = gWildMonHeaders[headerId];
+//     //struct WildPokemonHeader sourceWildHeader = gWildMonHeaders[headerId];
 
-    // construct a temporary list of wild pokemon
-    // struct WildPokemon tempWildPokemon[12] = {0};
-    // we'll take the encounters table from the ROM and substitute it with any dynamic encounters for this map from EWRAM
-    struct DynamicWildPokemonHeader *dynWildPokemonHeader = &dynamicWildMonHeaders[dynamicHeaderId];
+//     // construct a temporary list of wild pokemon
+//     // struct WildPokemon tempWildPokemon[12] = {0};
+//     // we'll take the encounters table from the ROM and substitute it with any dynamic encounters for this map from EWRAM
+//     //struct DynamicWildPokemonHeader *dynWildPokemonHeader = &dynamicWildMonHeaders[dynamicHeaderId];
 
-    // while we're constructing this list, if any of the encounters match the mon we just caught, then roll a new one and write it to the temp list
+//     // while we're constructing this list, if any of the encounters match the mon we just caught, then roll a new one and write it to the temp list
 
-    // finally, write the updated table of dynamic encounters to EWRAM
+//     // finally, write the updated table of dynamic encounters to EWRAM
 
-    // get the gWildMonHeaders from ROM
-    // then apply the dynamicHeader on top of it
+//     // get the gWildMonHeaders from ROM
+//     // then apply the dynamicHeader on top of it
 
-    // tempHeader.mapGroup = sourceWildHeader.mapGroup;
-    // tempHeader.mapNum = sourceWildHeader.mapNum;
-    // tempInfo.encounterRate = sourceWildHeader.landMonsInfo->encounterRate;
+//     // tempHeader.mapGroup = sourceWildHeader.mapGroup;
+//     // tempHeader.mapNum = sourceWildHeader.mapNum;
+//     // tempInfo.encounterRate = sourceWildHeader.landMonsInfo->encounterRate;
 
-    // newWildPokemonArr = {0};
-    u8 slotToOverwrite = 0;
-    u8 newMinLevel = 0;
-    u8 newMaxLevel = 0;
-    u16 dynamicMonId = 0;
-    struct WildPokemon *newWildPokemon;
-    DebugPrintf("Pointing to dynamic header at %d", &dynWildPokemonHeader);
-    for (i = 0; i < LAND_WILD_COUNT; i++)
-    {
-        u8 dynamicMonId = i % 7; // we only have half as many dynamic slots
-        struct WildPokemon srcWildPokemon = sourceWildHeader.landMonsInfo->wildPokemon[i];
-        struct WildPokemon *dynWildPokemon = dynWildPokemonHeader->wildPokemon[dynamicMonId];
-        DebugPrintf("%d: Testing against src pokemon of species %d", i, srcWildPokemon.species);
-        if (dynWildPokemon == NULL)
-        {
-            DebugPrintf("%d: No dynamic pokemon defined yet in slot %d", i, dynamicMonId);
-            // no dynamic override, so we can set this dynamic slot for the first time
-            if (srcWildPokemon.species == caughtMonSpecies)
-            {
-                slotToOverwrite = dynamicMonId;
-                newMinLevel = srcWildPokemon.minLevel + 1;
-                newMaxLevel = srcWildPokemon.maxLevel + 1;
-                DebugPrintf("%d: Species matches! Creating new encounter at level %d", i, newMinLevel);
-                break;
-            }
-        }
-        else
-        {
-            DebugPrintf("%d: Dynamic mon %d already defined at %d", i, dynWildPokemon->species, dynamicMonId);
-            // we caught a mon that was previously set as dynamic, so we update this slot
-            if (dynWildPokemon->species == caughtMonSpecies)
-            {
-                slotToOverwrite = dynamicMonId;
-                newMinLevel = dynWildPokemon->minLevel + 1;
-                newMaxLevel = dynWildPokemon->maxLevel + 1;
-                DebugPrintf("%d: Species matches previous dynamic pokemon! Creating new encounter at level %d", i, newMinLevel);
-                break;
-            }
-        }
-    }
-    dynamicMonId = (dynamicHeaderId * slotToOverwrite);
-    DebugPrintf("Writing to dynamic pokemon no. %d", dynamicMonId);
-    newWildPokemon = &dynamicWildPokemon[dynamicMonId];
-    newWildPokemon->minLevel = newMinLevel;
-    newWildPokemon->maxLevel = newMaxLevel;
-    do
-    {
-        newMonId = (Random() % 411) + 1;
-    } while (newMonId > 251 && newMonId < 277);
+//     // newWildPokemonArr = {0};
+//     u8 slotToOverwrite = 0;
+//     u8 newMinLevel = 0;
+//     u8 newMaxLevel = 0;
+//     u16 dynamicMonId = 0;
+//     struct WildPokemon *newWildPokemon;
+//     DebugPrintf("Pointing to dynamic header at %d", &dynWildPokemonHeader);
+//     for (i = 0; i < LAND_WILD_COUNT; i++)
+//     {
+//         u8 dynamicMonId = i % 7; // we only have half as many dynamic slots
+//         struct WildPokemon srcWildPokemon = sourceWildHeader.landMonsInfo->wildPokemon[i];
+//         struct WildPokemon *dynWildPokemon = dynWildPokemonHeader->wildPokemon[dynamicMonId];
+//         DebugPrintf("%d: Testing against src pokemon of species %d", i, srcWildPokemon.species);
+//         if (dynWildPokemon == NULL)
+//         {
+//             DebugPrintf("%d: No dynamic pokemon defined yet in slot %d", i, dynamicMonId);
+//             // no dynamic override, so we can set this dynamic slot for the first time
+//             if (srcWildPokemon.species == caughtMonSpecies)
+//             {
+//                 slotToOverwrite = dynamicMonId;
+//                 newMinLevel = srcWildPokemon.minLevel + 1;
+//                 newMaxLevel = srcWildPokemon.maxLevel + 1;
+//                 DebugPrintf("%d: Species matches! Creating new encounter at level %d", i, newMinLevel);
+//                 break;
+//             }
+//         }
+//         else
+//         {
+//             DebugPrintf("%d: Dynamic mon %d already defined at %d", i, dynWildPokemon->species, dynamicMonId);
+//             // we caught a mon that was previously set as dynamic, so we update this slot
+//             if (dynWildPokemon->species == caughtMonSpecies)
+//             {
+//                 slotToOverwrite = dynamicMonId;
+//                 newMinLevel = dynWildPokemon->minLevel + 1;
+//                 newMaxLevel = dynWildPokemon->maxLevel + 1;
+//                 DebugPrintf("%d: Species matches previous dynamic pokemon! Creating new encounter at level %d", i, newMinLevel);
+//                 break;
+//             }
+//         }
+//     }
+//     dynamicMonId = (dynamicHeaderId * slotToOverwrite);
+//     DebugPrintf("Writing to dynamic pokemon no. %d", dynamicMonId);
+//     newWildPokemon = &dynamicWildPokemon[dynamicMonId];
+//     newWildPokemon->minLevel = newMinLevel;
+//     newWildPokemon->maxLevel = newMaxLevel;
+//     do
+//     {
+//         newMonId = (Random() % 411) + 1;
+//     } while (newMonId > 251 && newMonId < 277);
 
-    newWildPokemon->species = newMonId;
-    DebugPrintf("Assigned new dynamic pokemon of species %d", newWildPokemon->species);
-    DebugPrintf("Assigned to header %d, slot %d", dynamicHeaderId, slotToOverwrite);
+//     newWildPokemon->species = newMonId;
+//     DebugPrintf("Assigned new dynamic pokemon of species %d", newWildPokemon->species);
+//     DebugPrintf("Assigned to header %d, slot %d", dynamicHeaderId, slotToOverwrite);
 
-    dynWildPokemonHeader->wildPokemon[slotToOverwrite] = newWildPokemon;
-}
+//     dynWildPokemonHeader->wildPokemon[slotToOverwrite] = newWildPokemon;
+// }
 
 static void Cmd_givecaughtmon(void)
 {
@@ -9413,7 +9413,7 @@ static void Cmd_givecaughtmon(void)
 
     gBattleResults.caughtMonSpecies = gBattleMons[gBattlerAttacker ^ BIT_SIDE].species;
     GetMonData(&gEnemyParty[gBattlerPartyIndexes[gBattlerAttacker ^ BIT_SIDE]], MON_DATA_NICKNAME, gBattleResults.caughtMonNick);
-    UpdateWildMapSlot();
+    // UpdateWildMapSlot();
     gBattlescriptCurrInstr++;
 }
 

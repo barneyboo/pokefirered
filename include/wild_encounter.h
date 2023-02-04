@@ -36,23 +36,26 @@ struct WildPokemonHeader
 extern const struct WildPokemonHeader gWildMonHeaders[];
 
 /* wild pokemon tables that are updated as the game is played*/
-struct DynamicWildPokemonInfo
-{
-    struct WildPokemon *wildPokemon;
-};
+// struct DynamicWildPokemonInfo
+// {
+//     struct WildPokemon *wildPokemon;
+// };
 
-struct DynamicWildPokemonHeader
-{
-    u8 mapGroup;
-    u8 mapNum;
-    struct WildPokemon *wildPokemon[7];
-};
+// struct DynamicWildPokemonHeader
+// {
+//     u8 mapGroup;
+//     u8 mapNum;
+//     struct WildPokemon *wildPokemon[7];
+// };
 
-extern struct DynamicWildPokemonHeader dynamicWildMonHeaders[15];
+// extern struct DynamicWildPokemonHeader dynamicWildMonHeaders[15];
 // extern struct DynamicWildPokemonInfo dynamicWildPokemonInfo[50];
+// extern struct WildPokemon dynamicWildPokemon[105];
 
-//!!! Experiment with using AGBPrint for debug logging!
-extern struct WildPokemon dynamicWildPokemon[105];
+extern bool8 OutbreakActive;
+extern u16 OutbreakMon;
+// extern u8 sText_OutbreakHere[];
+static const u8 sText_OutbreakHere[] = _("Oh! Looks like there's an outbreak\n of wild POKéMON here!{PAUSE_UNTIL_PRESS}");
 
 void DisableWildEncounters(bool8 disabled);
 bool8 StandardWildEncounter(u32 currMetatileAttrs, u16 previousMetaTileBehavior);

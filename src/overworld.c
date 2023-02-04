@@ -99,7 +99,8 @@ EWRAM_DATA bool8 gDisableMapMusicChangeOnMapLoad = MUSIC_DISABLE_OFF;
 static EWRAM_DATA u16 sAmbientCrySpecies = SPECIES_NONE;
 static EWRAM_DATA bool8 sIsAmbientCryWaterMon = FALSE;
 
-ALIGNED(4) EWRAM_DATA bool8 gExitStairsMovementDisabled = FALSE;
+ALIGNED(4)
+EWRAM_DATA bool8 gExitStairsMovementDisabled = FALSE;
 static EWRAM_DATA const struct CreditsOverworldCmd *sCreditsOverworld_Script = NULL;
 static EWRAM_DATA s16 sCreditsOverworld_CmdLength = 0;
 static EWRAM_DATA s16 sCreditsOverworld_CmdIndex = 0;
@@ -162,7 +163,7 @@ static void DoLoadMap_QLPlayback(u8 *state);
 static bool32 LoadMap_QLPlayback(u8 *state);
 static bool32 SetUpScrollSceneForCredits(u8 *state, u8 unused);
 static bool8 MapLdr_Credits(void);
-static void CameraCB_CreditsPan(struct CameraObject * camera);
+static void CameraCB_CreditsPan(struct CameraObject *camera);
 static void Task_OvwldCredits_FadeOut(u8 taskId);
 static void Task_OvwldCredits_WaitFade(u8 taskId);
 
@@ -214,22 +215,21 @@ static u8 FlipVerticalAndClearForced(u8 newFacing, u8 oldFacing);
 static u8 LinkPlayerDetectCollision(u8 selfObjEventId, u8 a2, s16 x, s16 y);
 static void SpriteCB_LinkPlayer(struct Sprite *sprite);
 
-extern const struct MapLayout * gMapLayouts[];
+extern const struct MapLayout *gMapLayouts[];
 extern const struct MapHeader *const *gMapGroups[];
 
 // Routines related to game state on warping in
 
 static const u8 sWhiteOutMoneyLossMultipliers[] = {
-     2,
-     4,
-     6,
-     9,
+    2,
+    4,
+    6,
+    9,
     12,
     16,
     20,
     25,
-    30
-};
+    30};
 
 static const u16 sWhiteOutMoneyLossBadgeFlagIDs[] = {
     FLAG_BADGE01_GET,
@@ -239,8 +239,7 @@ static const u16 sWhiteOutMoneyLossBadgeFlagIDs[] = {
     FLAG_BADGE05_GET,
     FLAG_BADGE06_GET,
     FLAG_BADGE07_GET,
-    FLAG_BADGE08_GET
-};
+    FLAG_BADGE08_GET};
 
 static void DoWhiteOut(void)
 {
@@ -408,7 +407,7 @@ static void LoadObjEventTemplatesFromHeader(void)
             u8 localId = gMapHeader.events->objectEvents[i].objUnion.clone.targetLocalId;
             u8 mapNum = gMapHeader.events->objectEvents[i].objUnion.clone.targetMapNum;
             u8 mapGroup = gMapHeader.events->objectEvents[i].objUnion.clone.targetMapGroup;
-            const struct MapHeader * connectionMap = Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum);
+            const struct MapHeader *connectionMap = Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum);
 
             gSaveBlock1Ptr->objectEventTemplates[j] = connectionMap->events->objectEvents[localId - 1];
             gSaveBlock1Ptr->objectEventTemplates[j].localId = gMapHeader.events->objectEvents[i].localId;
@@ -431,8 +430,8 @@ static void LoadObjEventTemplatesFromHeader(void)
 static void LoadSaveblockObjEventScripts(void)
 {
     int i;
-    const struct ObjectEventTemplate * src = gMapHeader.events->objectEvents;
-    struct ObjectEventTemplate * savObjTemplates = gSaveBlock1Ptr->objectEventTemplates;
+    const struct ObjectEventTemplate *src = gMapHeader.events->objectEvents;
+    struct ObjectEventTemplate *savObjTemplates = gSaveBlock1Ptr->objectEventTemplates;
 
     for (i = 0; i < OBJECT_EVENT_TEMPLATES_COUNT; i++)
     {
@@ -443,7 +442,7 @@ static void LoadSaveblockObjEventScripts(void)
 void SetObjEventTemplateCoords(u8 localId, s16 x, s16 y)
 {
     int i;
-    struct ObjectEventTemplate * savObjTemplates = gSaveBlock1Ptr->objectEventTemplates;
+    struct ObjectEventTemplate *savObjTemplates = gSaveBlock1Ptr->objectEventTemplates;
     for (i = 0; i < OBJECT_EVENT_TEMPLATES_COUNT; i++)
     {
         if (savObjTemplates[i].localId == localId)
@@ -497,8 +496,7 @@ static const struct WarpData sDummyWarpData = {
     .mapNum = MAP_NUM(UNDEFINED),
     .warpId = 0xFF,
     .x = -1,
-    .y = -1
-};
+    .y = -1};
 
 static void ApplyCurrentWarp(void)
 {
@@ -545,6 +543,22 @@ struct MapHeader const *const GetDestinationWarpMapHeader(void)
 
 static void LoadCurrentMapData(void)
 {
+    u16 rval = Random() % 100;
+    u16 newMonId = 0;
+    if (rval < 5)
+    {
+        OutbreakActive = TRUE;
+        do
+        {
+            newMonId = (Random() % 411) + 1;
+        } while (newMonId > 251 && newMonId < 277);
+        OutbreakMon = newMonId;
+        // DebugPrintf("New outbreak created with species %d", newMonId);
+    }
+    else
+    {
+        OutbreakActive = FALSE;
+    }
     gMapHeader = *Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum);
     gSaveBlock1Ptr->mapLayoutId = gMapHeader.mapLayoutId;
     gMapHeader.mapLayout = GetMapLayout();
@@ -698,7 +712,7 @@ void SetContinueGameWarpToDynamicWarp(int unused)
     gSaveBlock1Ptr->continueGameWarp = gSaveBlock1Ptr->dynamicWarp;
 }
 
-static const struct MapConnection * GetMapConnection(u8 dir)
+static const struct MapConnection *GetMapConnection(u8 dir)
 {
     s32 i;
     s32 count = gMapHeader.connections->count;
@@ -707,7 +721,7 @@ static const struct MapConnection * GetMapConnection(u8 dir)
     if (connection == NULL)
         return NULL;
 
-    for(i = 0; i < count; i++, connection++)
+    for (i = 0; i < count; i++, connection++)
         if (connection->direction == dir)
             return connection;
 
@@ -778,6 +792,11 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
     RunOnResumeMapScript();
     if (GetLastUsedWarpMapSectionId() != gMapHeader.regionMapSectionId)
         ShowMapNamePopup(TRUE);
+
+    if (OutbreakActive)
+    {
+        // ScriptContext_SetupScript(EventScript_OutbreakStart);
+    }
 }
 
 static void LoadMapFromWarp(bool32 unused)
@@ -805,6 +824,11 @@ static void LoadMapFromWarp(bool32 unused)
     RoamerMoveToOtherLocationSet();
     sub_8110920();
     InitMap();
+
+    if (isOutdoors && OutbreakActive)
+    {
+        // ScriptContext_SetupScript(EventScript_OutbreakStart);
+    }
 }
 
 static void QL_LoadMapNormal(void)
@@ -822,6 +846,10 @@ static void QL_LoadMapNormal(void)
     sub_8111708();
     LoadSaveblockMapHeader();
     InitMap();
+    if (isOutdoors && OutbreakActive)
+    {
+        // ScriptContext_SetupScript(EventScript_OutbreakStart);
+    }
 }
 
 // Routines related to the initial player avatar state
@@ -894,10 +922,7 @@ bool8 MetatileBehavior_IsSurfableInSeafoamIslands(u16 metatileBehavior)
 {
     if (MetatileBehavior_IsSurfable(metatileBehavior) != TRUE)
         return FALSE;
-    if ((gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(SEAFOAM_ISLANDS_B3F)
-          && gSaveBlock1Ptr->location.mapNum == MAP_NUM(SEAFOAM_ISLANDS_B3F))
-     || (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(SEAFOAM_ISLANDS_B4F)
-          && gSaveBlock1Ptr->location.mapNum == MAP_NUM(SEAFOAM_ISLANDS_B4F)))
+    if ((gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(SEAFOAM_ISLANDS_B3F) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(SEAFOAM_ISLANDS_B3F)) || (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(SEAFOAM_ISLANDS_B4F) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(SEAFOAM_ISLANDS_B4F)))
         return TRUE;
     return FALSE;
 }
@@ -922,8 +947,7 @@ static u8 GetAdjustedInitialDirection(struct InitialPlayerAvatarState *playerStr
         return DIR_WEST;
     else if (MetatileBehavior_IsDirectionalUpLeftStairWarp(metatileBehavior) == TRUE || MetatileBehavior_IsDirectionalDownLeftStairWarp(metatileBehavior) == TRUE)
         return DIR_EAST;
-    else if ((playerStruct->transitionFlags == PLAYER_AVATAR_FLAG_UNDERWATER  && transitionFlags == PLAYER_AVATAR_FLAG_SURFING)
-             || (playerStruct->transitionFlags == PLAYER_AVATAR_FLAG_SURFING && transitionFlags == PLAYER_AVATAR_FLAG_UNDERWATER ))
+    else if ((playerStruct->transitionFlags == PLAYER_AVATAR_FLAG_UNDERWATER && transitionFlags == PLAYER_AVATAR_FLAG_SURFING) || (playerStruct->transitionFlags == PLAYER_AVATAR_FLAG_SURFING && transitionFlags == PLAYER_AVATAR_FLAG_UNDERWATER))
         return playerStruct->direction;
     else if (MetatileBehavior_IsLadder(metatileBehavior) == TRUE)
         return playerStruct->direction;
@@ -976,14 +1000,14 @@ void SetCurrentMapLayout(u16 mapLayoutId)
     gMapHeader.mapLayout = GetMapLayout();
 }
 
-void Overworld_SetWarpDestinationFromWarp(struct WarpData * warp)
+void Overworld_SetWarpDestinationFromWarp(struct WarpData *warp)
 {
     sWarpDestination = *warp;
 }
 
 // Routines related to map music
 
-static u16 GetLocationMusic(struct WarpData * warp)
+static u16 GetLocationMusic(struct WarpData *warp)
 {
     return Overworld_GetMapHeaderByGroupAndId(warp->mapGroup, warp->mapNum)->music;
 }
@@ -1130,8 +1154,7 @@ static void PlayAmbientCry(void)
     s8 volume;
 
     PlayerGetDestCoords(&x, &y);
-    if (sIsAmbientCryWaterMon == TRUE
-        && !MetatileBehavior_IsSurfable(MapGridGetMetatileBehaviorAt(x, y)))
+    if (sIsAmbientCryWaterMon == TRUE && !MetatileBehavior_IsSurfable(MapGridGetMetatileBehaviorAt(x, y)))
         return;
     pan = (Random() % 88) + 212;
     volume = (Random() % 30) + 50;
@@ -1222,11 +1245,7 @@ u8 GetLastUsedWarpMapSectionId(void)
 
 bool8 IsMapTypeOutdoors(u8 mapType)
 {
-    if (mapType == MAP_TYPE_ROUTE
-        || mapType == MAP_TYPE_TOWN
-        || mapType == MAP_TYPE_UNDERWATER
-        || mapType == MAP_TYPE_CITY
-        || mapType == MAP_TYPE_OCEAN_ROUTE)
+    if (mapType == MAP_TYPE_ROUTE || mapType == MAP_TYPE_TOWN || mapType == MAP_TYPE_UNDERWATER || mapType == MAP_TYPE_CITY || mapType == MAP_TYPE_OCEAN_ROUTE)
         return TRUE;
     else
         return FALSE;
@@ -1234,10 +1253,7 @@ bool8 IsMapTypeOutdoors(u8 mapType)
 
 bool8 Overworld_MapTypeAllowsTeleportAndFly(u8 mapType)
 {
-    if (mapType == MAP_TYPE_ROUTE
-        || mapType == MAP_TYPE_TOWN
-        || mapType == MAP_TYPE_OCEAN_ROUTE
-        || mapType == MAP_TYPE_CITY)
+    if (mapType == MAP_TYPE_ROUTE || mapType == MAP_TYPE_TOWN || mapType == MAP_TYPE_OCEAN_ROUTE || mapType == MAP_TYPE_CITY)
         return TRUE;
     else
         return FALSE;
@@ -1245,8 +1261,7 @@ bool8 Overworld_MapTypeAllowsTeleportAndFly(u8 mapType)
 
 bool8 IsMapTypeIndoors(u8 mapType)
 {
-    if (mapType == MAP_TYPE_INDOOR
-        || mapType == MAP_TYPE_SECRET_BASE)
+    if (mapType == MAP_TYPE_INDOOR || mapType == MAP_TYPE_SECRET_BASE)
         return TRUE;
     else
         return FALSE;
@@ -1272,60 +1287,53 @@ static const int sUnusedData[] = {
     3600,
     1200,
     2400,
-      50,
-      80,
-     -44,
-      44
-};
+    50,
+    80,
+    -44,
+    44};
 
-const struct Coords32 gDirectionToVectors[] = 
-{
-    [DIR_NONE]      = { 0,  0},
-    [DIR_SOUTH]     = { 0,  1},
-    [DIR_NORTH]     = { 0, -1},
-    [DIR_WEST]      = {-1,  0},
-    [DIR_EAST]      = { 1,  0},
-    [DIR_SOUTHWEST] = {-1,  1},
-    [DIR_SOUTHEAST] = { 1,  1},
-    [DIR_NORTHWEST] = {-1, -1},
-    [DIR_NORTHEAST] = { 1, -1},
+const struct Coords32 gDirectionToVectors[] =
+    {
+        [DIR_NONE] = {0, 0},
+        [DIR_SOUTH] = {0, 1},
+        [DIR_NORTH] = {0, -1},
+        [DIR_WEST] = {-1, 0},
+        [DIR_EAST] = {1, 0},
+        [DIR_SOUTHWEST] = {-1, 1},
+        [DIR_SOUTHEAST] = {1, 1},
+        [DIR_NORTHWEST] = {-1, -1},
+        [DIR_NORTHEAST] = {1, -1},
 };
 
 static const struct BgTemplate sOverworldBgTemplates[] = {
-    {
-        .bg = 0,
-        .charBaseIndex = 2,
-        .mapBaseIndex = 31,
-        .screenSize = 0,
-        .paletteMode = 0,
-        .priority = 0,
-        .baseTile = 0x000
-    }, {
-        .bg = 1,
-        .charBaseIndex = 0,
-        .mapBaseIndex = 29,
-        .screenSize = 0,
-        .paletteMode = 0,
-        .priority = 1,
-        .baseTile = 0x000
-    }, {
-        .bg = 2,
-        .charBaseIndex = 0,
-        .mapBaseIndex = 28,
-        .screenSize = 0,
-        .paletteMode = 0,
-        .priority = 2,
-        .baseTile = 0x000
-    }, {
-        .bg = 3,
-        .charBaseIndex = 0,
-        .mapBaseIndex = 30,
-        .screenSize = 0,
-        .paletteMode = 0,
-        .priority = 3,
-        .baseTile = 0x000
-    }
-};
+    {.bg = 0,
+     .charBaseIndex = 2,
+     .mapBaseIndex = 31,
+     .screenSize = 0,
+     .paletteMode = 0,
+     .priority = 0,
+     .baseTile = 0x000},
+    {.bg = 1,
+     .charBaseIndex = 0,
+     .mapBaseIndex = 29,
+     .screenSize = 0,
+     .paletteMode = 0,
+     .priority = 1,
+     .baseTile = 0x000},
+    {.bg = 2,
+     .charBaseIndex = 0,
+     .mapBaseIndex = 28,
+     .screenSize = 0,
+     .paletteMode = 0,
+     .priority = 2,
+     .baseTile = 0x000},
+    {.bg = 3,
+     .charBaseIndex = 0,
+     .mapBaseIndex = 30,
+     .screenSize = 0,
+     .paletteMode = 0,
+     .priority = 3,
+     .baseTile = 0x000}};
 
 static void InitOverworldBgs(void)
 {
@@ -1751,8 +1759,7 @@ static void InitCurrentFlashLevelScanlineEffect(void)
             .dmaDest = &REG_WIN0H,
             .dmaControl = (2 >> 1) | ((DMA_16BIT | DMA_DEST_RELOAD | DMA_SRC_INC | DMA_REPEAT | DMA_START_HBLANK | DMA_ENABLE) << 16),
             .initState = 1,
-            .unused9 = 0
-        });
+            .unused9 = 0});
     }
 }
 
@@ -2030,7 +2037,8 @@ static bool32 ReturnToFieldLink(u8 *state)
 
 static void DoMapLoadLoop(u8 *state)
 {
-    while (!LoadMapInStepsLocal(state, FALSE)) ;
+    while (!LoadMapInStepsLocal(state, FALSE))
+        ;
 }
 
 static void MoveSaveBlocks_ResetHeap_(void)
@@ -2067,8 +2075,7 @@ static void InitOverworldGraphicsRegisters(void)
     SetGpuReg(REG_OFFSET_WIN0V, WIN_RANGE(0, 255));
     SetGpuReg(REG_OFFSET_WIN1H, WIN_RANGE(255, 255));
     SetGpuReg(REG_OFFSET_WIN1V, WIN_RANGE(255, 255));
-    SetGpuReg(REG_OFFSET_BLDCNT, gOverworldBackgroundLayerFlags[1] | gOverworldBackgroundLayerFlags[2] | gOverworldBackgroundLayerFlags[3]
-                                 | BLDCNT_TGT2_OBJ | BLDCNT_EFFECT_BLEND);
+    SetGpuReg(REG_OFFSET_BLDCNT, gOverworldBackgroundLayerFlags[1] | gOverworldBackgroundLayerFlags[2] | gOverworldBackgroundLayerFlags[3] | BLDCNT_TGT2_OBJ | BLDCNT_EFFECT_BLEND);
     SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(13, 7));
     ScheduleBgCopyTilemapToVram(1);
     ScheduleBgCopyTilemapToVram(2);
@@ -2362,7 +2369,7 @@ static bool8 FieldCB2_Credits_WaitFade(void)
         return FALSE;
 }
 
-bool32 Overworld_DoScrollSceneForCredits(u8 *state_p, const struct CreditsOverworldCmd * script, u8 tintMode)
+bool32 Overworld_DoScrollSceneForCredits(u8 *state_p, const struct CreditsOverworldCmd *script, u8 tintMode)
 {
     sCreditsOverworld_Script = script;
     gGlobalFieldTintMode = tintMode;
@@ -2475,7 +2482,7 @@ static bool8 MapLdr_Credits(void)
     return FALSE;
 }
 
-static void CameraCB_CreditsPan(struct CameraObject * camera)
+static void CameraCB_CreditsPan(struct CameraObject *camera)
 {
     if (sCreditsOverworld_CmdLength == 0)
     {
@@ -2536,36 +2543,36 @@ static void Task_OvwldCredits_WaitFade(u8 taskId)
 // Link related
 
 static u8 (*const sLinkPlayerMovementModes[])(struct LinkPlayerObjectEvent *, struct ObjectEvent *, u8) =
-{
-    [MOVEMENT_MODE_FREE]     = MovementEventModeCB_Normal,
-    [MOVEMENT_MODE_FROZEN]   = MovementEventModeCB_Ignored,
-    [MOVEMENT_MODE_SCRIPTED] = MovementEventModeCB_Normal_2,
+    {
+        [MOVEMENT_MODE_FREE] = MovementEventModeCB_Normal,
+        [MOVEMENT_MODE_FROZEN] = MovementEventModeCB_Ignored,
+        [MOVEMENT_MODE_SCRIPTED] = MovementEventModeCB_Normal_2,
 };
 
 // These handlers return TRUE if the movement was scripted and successful, and FALSE otherwise.
 static bool8 (*const sLinkPlayerFacingHandlers[])(struct LinkPlayerObjectEvent *, struct ObjectEvent *, u8) =
-{
-    [DIR_NONE]  = FacingHandler_DoNothing,
-    [DIR_SOUTH] = FacingHandler_DpadMovement,
-    [DIR_NORTH] = FacingHandler_DpadMovement,
-    [DIR_WEST]  = FacingHandler_DpadMovement,
-    [DIR_EAST]  = FacingHandler_DpadMovement,
+    {
+        [DIR_NONE] = FacingHandler_DoNothing,
+        [DIR_SOUTH] = FacingHandler_DpadMovement,
+        [DIR_NORTH] = FacingHandler_DpadMovement,
+        [DIR_WEST] = FacingHandler_DpadMovement,
+        [DIR_EAST] = FacingHandler_DpadMovement,
 };
 
 static bool8 (*const sUnusedLinkPlayerFacingHandlers[])(struct LinkPlayerObjectEvent *, struct ObjectEvent *, u8) =
-{
-    FacingHandler_DoNothing,
-    FacingHandler_DoNothing,
-    FacingHandler_ForcedFacingChange,
-    FacingHandler_ForcedFacingChange,
-    FacingHandler_ForcedFacingChange,
-    FacingHandler_ForcedFacingChange,
+    {
+        FacingHandler_DoNothing,
+        FacingHandler_DoNothing,
+        FacingHandler_ForcedFacingChange,
+        FacingHandler_ForcedFacingChange,
+        FacingHandler_ForcedFacingChange,
+        FacingHandler_ForcedFacingChange,
 };
 
 // These handlers are run after an attempted movement.
 static void (*const sMovementStatusHandler[])(struct LinkPlayerObjectEvent *, struct ObjectEvent *) = {
     [FALSE] = MovementStatusHandler_EnterFreeMode,
-    [TRUE]  = MovementStatusHandler_TryAdvanceScript,
+    [TRUE] = MovementStatusHandler_TryAdvanceScript,
 };
 
 static void CB1_UpdateLinkState(void)
@@ -2782,10 +2789,7 @@ static void UpdateHeldKeyCode(u16 key)
     else
         gHeldKeyCodeToSend = LINK_KEY_CODE_EMPTY;
 
-    if (gWirelessCommType != 0
-        && GetLinkSendQueueLength() > 1
-        && IsUpdateLinkStateCBActive() == TRUE
-        && IsSendingKeysToLink() == TRUE)
+    if (gWirelessCommType != 0 && GetLinkSendQueueLength() > 1 && IsUpdateLinkStateCBActive() == TRUE && IsSendingKeysToLink() == TRUE)
     {
         switch (key)
         {
@@ -3362,8 +3366,7 @@ static u8 GetLinkPlayerIdAt(s16 x, s16 y)
     u8 i;
     for (i = 0; i < MAX_LINK_PLAYERS; i++)
     {
-        if (gLinkPlayerObjectEvents[i].active
-            && (gLinkPlayerObjectEvents[i].movementMode == 0 || gLinkPlayerObjectEvents[i].movementMode == 2))
+        if (gLinkPlayerObjectEvents[i].active && (gLinkPlayerObjectEvents[i].movementMode == 0 || gLinkPlayerObjectEvents[i].movementMode == 2))
         {
             struct ObjectEvent *objEvent = &gObjectEvents[gLinkPlayerObjectEvents[i].objEventId];
             if (objEvent->currentCoords.x == x && objEvent->currentCoords.y == y)
@@ -3494,8 +3497,7 @@ static bool8 LinkPlayerDetectCollision(u8 selfObjEventId, u8 a2, s16 x, s16 y)
     {
         if (i != selfObjEventId)
         {
-            if ((gObjectEvents[i].currentCoords.x == x && gObjectEvents[i].currentCoords.y == y)
-                || (gObjectEvents[i].previousCoords.x == x && gObjectEvents[i].previousCoords.y == y))
+            if ((gObjectEvents[i].currentCoords.x == x && gObjectEvents[i].currentCoords.y == y) || (gObjectEvents[i].previousCoords.x == x && gObjectEvents[i].previousCoords.y == y))
             {
                 return TRUE;
             }

@@ -125,7 +125,7 @@ void AgbMain()
     RegisterRamReset(RESET_ALL);
 #endif // MODERN
     MgbaOpen();
-    DebugPrintf("Game init - hi mgba \n");
+    // DebugPrintf("Game init - hi mgba \n");
     *(vu16 *)BG_PLTT = RGB_WHITE;
     InitGpuRegManager();
     REG_WAITCNT = WAITCNT_PREFETCH_ENABLE | WAITCNT_WS0_S_1 | WAITCNT_WS0_N_3;

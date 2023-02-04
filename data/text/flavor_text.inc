@@ -120,3 +120,8 @@ Text_Burglary::
 Text_PlayerFacingTVScreen::
 	.string "There's a POKéMON on TV!\n"
 	.string "It looks like it's having fun.$"
+
+Text_OutbreakStart::
+	.string "Oh! Looks like there's an\n"
+	.string "outbreak of wild POKéMON here!$"
+	

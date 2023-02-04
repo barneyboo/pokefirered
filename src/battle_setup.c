@@ -237,7 +237,7 @@ void StartWildBattle(void)
 
 static void DoStandardWildBattle(void)
 {
-    DebugPrintf("Pokemon battle start \n");
+    // DebugPrintf("Pokemon battle start \n");
     LockPlayerFieldControls();
     FreezeObjectEvents();
     StopPlayerAvatar();

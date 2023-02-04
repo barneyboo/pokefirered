@@ -32,22 +32,22 @@
 
 struct TrainerFanClub
 {
-    u8 timer:7;
-    u8 gotInitialFans:1;
+    u8 timer : 7;
+    u8 gotInitialFans : 1;
     u8 fanFlags;
 };
 
 #define TRAINER_FAN_CLUB ((struct TrainerFanClub *)GetVarPointer(VAR_FANCLUB_FAN_COUNTER))
 
-#define GET_TRAINER_FAN_CLUB_FLAG(flag) (fanClub->fanFlags >> (flag) & 1)
+#define GET_TRAINER_FAN_CLUB_FLAG(flag) (fanClub->fanFlags >> (flag)&1)
 #define SET_TRAINER_FAN_CLUB_FLAG(flag) (fanClub->fanFlags |= 1 << (flag))
-#define FLIP_TRAINER_FAN_CLUB_FLAG(flag)(fanClub->fanFlags ^= 1 << (flag))
+#define FLIP_TRAINER_FAN_CLUB_FLAG(flag) (fanClub->fanFlags ^= 1 << (flag))
 
 struct UnkStruct_203AE94
 {
-    u8 playbackSubstate:4;
-    u8 playingEvent:2;
-    u8 sceneEndMode:2;
+    u8 playbackSubstate : 4;
+    u8 playingEvent : 2;
+    u8 sceneEndMode : 2;
     u8 cursor;
     u8 timer;
     u8 overlapTimer;
@@ -55,17 +55,17 @@ struct UnkStruct_203AE94
 
 struct FlagOrVarRecord
 {
-    u16 idx:15;
-    u16 isFlag:1;
+    u16 idx : 15;
+    u16 isFlag : 1;
     u16 value;
 };
 
 u8 gQuestLogPlaybackState;
 u16 sNumEventsInLogEntry;
 struct FieldInput gQuestLogFieldInput;
-struct QuestLogEntry * sCurQuestLogEntry;
+struct QuestLogEntry *sCurQuestLogEntry;
 
-static struct FlagOrVarRecord * sFlagOrVarRecords;
+static struct FlagOrVarRecord *sFlagOrVarRecords;
 static u16 sNumFlagsOrVars;
 
 static EWRAM_DATA u8 sCurrentSceneNum = 0;
@@ -76,7 +76,7 @@ static EWRAM_DATA u8 sQuestLogHeaderWindowIds[3] = {0};
 EWRAM_DATA u16 *gUnknown_203AE04 = NULL;
 EWRAM_DATA u16 *sEventRecordingPointer = NULL;
 static EWRAM_DATA u16 *gUnknown_203AE0C[32] = {NULL};
-static EWRAM_DATA void (* sQuestLogCB)(void) = NULL;
+static EWRAM_DATA void (*sQuestLogCB)(void) = NULL;
 static EWRAM_DATA u16 *sPalettesBackup = NULL;
 static EWRAM_DATA struct UnkStruct_203AE94 sQuestLogCurrentScene = {0};
 static EWRAM_DATA struct QuestLogEntry sQuestLogSceneRecordBuffer[32] = {0};
@@ -135,17 +135,16 @@ static bool16 IsFanClubMemberFanOfPlayer(struct TrainerFanClub *);
 static void SetInitialFansOfPlayer(struct TrainerFanClub *);
 static void BufferFanClubTrainerName(struct LinkBattleRecords *, u8, u8);
 static void UpdateTrainerFansAfterLinkBattle(struct TrainerFanClub *);
-static bool8 DidPlayerGetFirstFans(struct TrainerFanClub * );
+static bool8 DidPlayerGetFirstFans(struct TrainerFanClub *);
 static void SetPlayerGotFirstFans(struct TrainerFanClub *);
 static bool8 InQuestLogDisabledLocation(void);
 static bool8 TrySetLinkQuestLogEvent(u16, const u16 *);
 static bool8 TrySetTrainerBattleQuestLogEvent(u16, const u16 *);
 
 static const struct WindowTemplate sQuestLogHeaderWindowTemplates[3] = {
-    { 0, 0,  0, 30, 2, 15, 0x0e9 },
-    { 0, 0, 18, 30, 2, 15, 0x0ad },
-    { 0, 0, 14, 30, 6, 15, 0x14c }
-};
+    {0, 0, 0, 30, 2, 15, 0x0e9},
+    {0, 0, 18, 30, 2, 15, 0x0ad},
+    {0, 0, 14, 30, 6, 15, 0x14c}};
 
 static const u8 sTextColors[3] = {TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_WHITE, TEXT_DYNAMIC_COLOR_3};
 
@@ -248,10 +247,7 @@ static void QLogCB_Playback(void)
 
     if (sQuestLogCurrentScene.sceneEndMode == 0)
     {
-        if (gQuestLogPlaybackState != 0 
-         || sQuestLogCurrentScene.playbackSubstate == 1 
-         || (sQuestLogCurrentScene.cursor < NELEMS(gUnknown_203AE0C) 
-          && gUnknown_203AE0C[sQuestLogCurrentScene.cursor] != NULL))
+        if (gQuestLogPlaybackState != 0 || sQuestLogCurrentScene.playbackSubstate == 1 || (sQuestLogCurrentScene.cursor < NELEMS(gUnknown_203AE0C) && gUnknown_203AE0C[sQuestLogCurrentScene.cursor] != NULL))
             QuestLog_PlayCurrentEvent();
         else
         {
@@ -298,7 +294,7 @@ void StartRecordingQuestLogEntry(u16 eventId)
 
 static void SetPlayerInitialCoordsAtScene(u8 sceneNum)
 {
-    struct QuestLog * questLog = &gSaveBlock1Ptr->questLog[sceneNum];
+    struct QuestLog *questLog = &gSaveBlock1Ptr->questLog[sceneNum];
     questLog->mapGroup = gSaveBlock1Ptr->location.mapGroup;
     questLog->mapNum = gSaveBlock1Ptr->location.mapNum;
     questLog->warpId = gSaveBlock1Ptr->location.warpId;
@@ -308,7 +304,7 @@ static void SetPlayerInitialCoordsAtScene(u8 sceneNum)
 
 static void SetNPCInitialCoordsAtScene(u8 sceneNum)
 {
-    struct QuestLog * questLog = &gSaveBlock1Ptr->questLog[sceneNum];
+    struct QuestLog *questLog = &gSaveBlock1Ptr->questLog[sceneNum];
     u16 i;
 
     SetQuestLogObjectEventsData(questLog);
@@ -342,7 +338,7 @@ static void SetNPCInitialCoordsAtScene(u8 sceneNum)
 
 static void SetGameStateAtScene(u8 sceneNum)
 {
-    struct QuestLog * questLog = &gSaveBlock1Ptr->questLog[sceneNum];
+    struct QuestLog *questLog = &gSaveBlock1Ptr->questLog[sceneNum];
 
     CpuCopy16(gSaveBlock1Ptr->flags, questLog->flags, NUM_FLAG_BYTES * sizeof(u8));
     CpuCopy16(gSaveBlock1Ptr->vars, questLog->vars, VARS_COUNT * sizeof(u16));
@@ -379,7 +375,7 @@ static void TryRecordEvent39_GoToNextScene(void)
         sCurrentSceneNum = 0;
 }
 
-static bool8 TryRecordQuestLogEntrySequence(struct QuestLogEntry * entry)
+static bool8 TryRecordQuestLogEntrySequence(struct QuestLogEntry *entry)
 {
     u16 i;
 
@@ -441,7 +437,7 @@ void TrySetUpQuestLogScenes_ElseContinueFromSave(u8 taskId)
 static void Task_BeginQuestLogPlayback(u8 taskId)
 {
     gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(ROUTE1);
-    gSaveBlock1Ptr->location.mapNum =  MAP_NUM(ROUTE1);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(ROUTE1);
     gSaveBlock1Ptr->location.warpId = -1;
     sCurrentSceneNum = 0;
     gDisableMapMusicChangeOnMapLoad = 1;
@@ -514,7 +510,7 @@ static void QuestLogPlaybackSetObjectEventTemplates(u8 sceneNum)
 {
     struct QuestLog *questLog = &gSaveBlock1Ptr->questLog[sceneNum];
     u16 i;
-    
+
     for (i = 0; i < 64; i++)
     {
         if (questLog->npcData[i].negx)
@@ -535,7 +531,7 @@ static void QuestLogPlaybackSetObjectEventTemplates(u8 sceneNum)
 static void QLPlayback_SetInitialPlayerPosition(u8 sceneNum, bool8 isWarp)
 {
     struct WarpData sp0;
-    
+
     if (!isWarp)
     {
         gSaveBlock1Ptr->location.mapGroup = gSaveBlock1Ptr->questLog[sceneNum].mapGroup;
@@ -578,7 +574,7 @@ static void QLPlayback_InitOverworldState(void)
 
 void sub_81113E4(void)
 {
-    struct QuestLog * questLog = &gSaveBlock1Ptr->questLog[sCurrentSceneNum];
+    struct QuestLog *questLog = &gSaveBlock1Ptr->questLog[sCurrentSceneNum];
 
     CpuCopy16(questLog->flags, gSaveBlock1Ptr->flags, NUM_FLAG_BYTES * sizeof(u8));
     CpuCopy16(questLog->vars, gSaveBlock1Ptr->vars, VARS_COUNT * sizeof(u16));
@@ -647,7 +643,7 @@ void sub_8111438(void)
         {
             for (r6 = 0; r6 < IN_BOX_COUNT; r6++)
             {
-                struct BoxPokemon * boxMon = GetBoxedMonPtr(r3, r6);
+                struct BoxPokemon *boxMon = GetBoxedMonPtr(r3, r6);
                 if (!GetBoxMonData(boxMon, MON_DATA_SANITY_HAS_SPECIES))
                 {
                     CopyMon(boxMon, &r9->mon.box, sizeof(struct BoxPokemon));
@@ -734,7 +730,7 @@ void sub_8111708(void)
     }
 }
 
-static void ReadQuestLogScriptFromSav1(u8 sceneNum, struct QuestLogEntry * a1)
+static void ReadQuestLogScriptFromSav1(u8 sceneNum, struct QuestLogEntry *a1)
 {
     u16 i;
     u16 *r4;
@@ -828,16 +824,16 @@ bool8 QuestLog_SchedulePlaybackCB(void (*callback)(void))
 
     switch (gQuestLogState)
     {
-        case QL_STATE_RECORDING:
-            QuestLog_CutRecording();
-            break;
-        case QL_STATE_PLAYBACK:
-            gQuestLogPlaybackState = 3;
-            taskId = CreateTask(Task_RunPlaybackCB, 80);
-            gTasks[taskId].data[0] = 0;
-            gTasks[taskId].data[1] = 0;
-            SetWordTaskArg(taskId, 14, (uintptr_t)callback);
-            return TRUE;
+    case QL_STATE_RECORDING:
+        QuestLog_CutRecording();
+        break;
+    case QL_STATE_PLAYBACK:
+        gQuestLogPlaybackState = 3;
+        taskId = CreateTask(Task_RunPlaybackCB, 80);
+        gTasks[taskId].data[0] = 0;
+        gTasks[taskId].data[1] = 0;
+        SetWordTaskArg(taskId, 14, (uintptr_t)callback);
+        return TRUE;
     }
     return FALSE;
 }
@@ -861,7 +857,7 @@ static void Task_RunPlaybackCB(u8 taskId)
         if (!gPaletteFade.active)
         {
             gQuestLogPlaybackState = 0;
-            routine = (void (*)(void)) GetWordTaskArg(taskId, 14);
+            routine = (void (*)(void))GetWordTaskArg(taskId, 14);
             if (routine != NULL)
                 routine();
             DestroyTask(taskId);
@@ -1233,6 +1229,8 @@ void FinishRecordingQuestLogScene(void)
         gUnknown_203AE04 = NULL;
         sEventRecordingPointer = NULL;
         gQuestLogPlaybackState = 0;
+        sub_8113B44(gUnknown_203AE0C[sQuestLogCurrentScene.cursor]);
+        // DebugPrintf("event text: %S", gStringVar4);
     }
 }
 
@@ -1253,7 +1251,7 @@ void QuestLog_CutRecording(void)
 
 static void SortQuestLogInSav1(void)
 {
-    struct QuestLog * buffer = AllocZeroed(QUEST_LOG_SCENE_COUNT * sizeof(struct QuestLog));
+    struct QuestLog *buffer = AllocZeroed(QUEST_LOG_SCENE_COUNT * sizeof(struct QuestLog));
     u8 i;
     u8 sceneNum = sCurrentSceneNum;
     u8 count = 0;
@@ -1397,7 +1395,7 @@ void QuestLogRecordPlayerAvatarGfxTransitionWithDuration(u8 movementActionId, u8
     }
 }
 
-void sub_81127F8(struct FieldInput * a0)
+void sub_81127F8(struct FieldInput *a0)
 {
     if (sQuestLogCursor < sNumEventsInLogEntry)
     {
@@ -1496,7 +1494,7 @@ static void SetUpQuestLogEntry(u8 kind, struct QuestLogEntry *entry, u16 size)
         sNumEventsInLogEntry = size / sizeof(*sCurQuestLogEntry);
         for (i = 0; i < sNumEventsInLogEntry; i++)
         {
-            sCurQuestLogEntry[i] = (struct QuestLogEntry){ 0, 0, 0, 0, 0xFFFF, 0xFF };
+            sCurQuestLogEntry[i] = (struct QuestLogEntry){0, 0, 0, 0, 0xFFFF, 0xFF};
         }
         sQuestLogCursor = 0;
         sNextStepDelay = 0;
@@ -1580,8 +1578,7 @@ void sub_8112B3C(void)
                         break;
                     }
                     sNextStepDelay = sCurQuestLogEntry[sQuestLogCursor].duration;
-                } while (gQuestLogPlaybackState != 3
-                      && (sNextStepDelay == 0 || sNextStepDelay == 0xFFFF));
+                } while (gQuestLogPlaybackState != 3 && (sNextStepDelay == 0 || sNextStepDelay == 0xFFFF));
             }
         }
         else if (sQuestLogCursor >= sNumEventsInLogEntry)
@@ -1642,8 +1639,7 @@ static bool8 RecordHeadAtEndOfEntry(void)
 static const struct FlagOrVarRecord sDummyFlagOrVarRecord = {
     0,
     FALSE,
-    0x7FFF
-};
+    0x7FFF};
 
 void *QuestLogGetFlagOrVarPtr(bool8 isFlag, u16 idx)
 {
@@ -1678,7 +1674,7 @@ void QuestLogSetFlagOrVar(bool8 isFlag, u16 idx, u16 value)
     sFlagOrVarPlayhead++;
 }
 
-void sub_8112E3C(u8 state, struct FlagOrVarRecord * records, u16 size)
+void sub_8112E3C(u8 state, struct FlagOrVarRecord *records, u16 size)
 {
     s32 i;
 

@@ -30,9 +30,12 @@ struct WildEncounterData
 static EWRAM_DATA struct WildEncounterData sWildEncounterData = {};
 static EWRAM_DATA bool8 sWildEncountersDisabled = FALSE;
 
+EWRAM_DATA bool8 OutbreakActive = FALSE;
+EWRAM_DATA u16 OutbreakMon = 0;
+
 // dynamic wild encounter tables only use 6 slots to save space
-EWRAM_DATA struct WildPokemon dynamicWildPokemon[105] = {0};
-EWRAM_DATA struct DynamicWildPokemonHeader dynamicWildMonHeaders[15] = {0};
+// EWRAM_DATA struct WildPokemon dynamicWildPokemon[105] = {0};
+// EWRAM_DATA struct DynamicWildPokemonHeader dynamicWildMonHeaders[15] = {0};
 // EWRAM_DATA struct DynamicWildPokemonInfo dynamicWildPokemonInfo[35] = {0};
 // store dynamic encounter tables for up to 50 maps
 // if this is full, randomly overwrite existing maps
@@ -272,11 +275,12 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *info, u8 area, u8 
     u8 level;
     u16 slotSpecies;
     u16 headerId;
-    u16 dynamicHeaderId;
-    u8 dynamicSlot;
-    struct DynamicWildPokemonHeader *dynWildPokemonHeader;
-    struct WildPokemon *dynWildPokemon;
-    DebugPrintf("Choosing wild mon");
+    u16 rval = Random() % 100;
+    // u16 dynamicHeaderId;
+    // u8 dynamicSlot;
+    // struct DynamicWildPokemonHeader *dynWildPokemonHeader;
+    // struct WildPokemon *dynWildPokemon;
+    // DebugPrintf("Choosing wild mon");
     switch (area)
     {
     case WILD_AREA_LAND:
@@ -295,25 +299,33 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *info, u8 area, u8 
         return FALSE;
     }
 
-    // try to inject a dynamic pokemon if one is defined
     slotSpecies = info->wildPokemon[slot].species;
-    headerId = GetCurrentMapWildMonHeaderId();
-    dynamicHeaderId = headerId % 15;
-    dynamicSlot = slot % 7;
-    DebugPrintf("Looking for mon at header %d, slot %d", dynamicHeaderId, dynamicSlot);
-    dynWildPokemonHeader = &dynamicWildMonHeaders[dynamicHeaderId];
-    DebugPrintf("Pointing to dynamic header at %d", &dynWildPokemonHeader);
-    if (dynWildPokemonHeader->wildPokemon != 0)
+    // try to use the outbreak mon
+    if (OutbreakActive == TRUE && rval > 50)
     {
-        // DebugPrintf("Dynamic mon found for header %d, slot %d", dynamicHeaderId, dynamicSlot);
-        dynWildPokemon = dynWildPokemonHeader->wildPokemon[dynamicSlot];
-        if (dynWildPokemon != NULL)
-        {
-            slotSpecies = dynWildPokemon->species;
-            DebugPrintf("Chosen dynamic pokemon %d", slotSpecies);
-            level = ChooseWildMonLevel(dynWildPokemon);
-        }
+        slotSpecies = OutbreakMon;
+        // DebugPrintf("Wild encounter started with outbreak mon %d", slotSpecies);
     }
+
+    // try to inject a dynamic pokemon if one is defined
+    // slotSpecies = info->wildPokemon[slot].species;
+    // headerId = GetCurrentMapWildMonHeaderId();
+    // dynamicHeaderId = headerId % 15;
+    // dynamicSlot = slot % 7;
+    // DebugPrintf("Looking for mon at header %d, slot %d", dynamicHeaderId, dynamicSlot);
+    // dynWildPokemonHeader = &dynamicWildMonHeaders[dynamicHeaderId];
+    // DebugPrintf("Pointing to dynamic header at %d", &dynWildPokemonHeader);
+    // if (dynWildPokemonHeader->wildPokemon != 0)
+    // {
+    //     // DebugPrintf("Dynamic mon found for header %d, slot %d", dynamicHeaderId, dynamicSlot);
+    //     dynWildPokemon = dynWildPokemonHeader->wildPokemon[dynamicSlot];
+    //     if (dynWildPokemon != NULL)
+    //     {
+    //         slotSpecies = dynWildPokemon->species;
+    //         DebugPrintf("Chosen dynamic pokemon %d", slotSpecies);
+    //         level = ChooseWildMonLevel(dynWildPokemon);
+    //     }
+    // }
 
     GenerateWildMon(slotSpecies, level, slot);
     return TRUE;

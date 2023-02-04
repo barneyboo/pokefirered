@@ -1325,6 +1325,12 @@ EventScript_NoMoreRoomForPokemon::
 	.include "data/text/braille.inc"
 	.include "data/scripts/trainers.inc"
 
+EventScript_OutbreakStart::
+	msgbox Text_OutbreakStart
+	release
+	end
+
+
 @ Test message!
 @ Welcome to the world of Pokémon!
 Text_TestMsg::

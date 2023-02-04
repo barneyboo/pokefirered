@@ -118,7 +118,7 @@ u32 ComputeWhiteOutMoneyLoss(void);
 extern u8 gDisableMapMusicChangeOnMapLoad;
 extern u8 gGlobalFieldTintMode;
 
-extern bool8 (* gFieldCallback2)(void);
+extern bool8 (*gFieldCallback2)(void);
 
 void SetLastHealLocationWarp(u8 healLocaionId);
 void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum);
@@ -185,4 +185,4 @@ extern u16 *gBGTilemapBuffers2;
 extern u16 *gBGTilemapBuffers3;
 extern u16 gHeldKeyCodeToSend;
 
-#endif //GUARD_OVERWORLD_H
+#endif // GUARD_OVERWORLD_H
