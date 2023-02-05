@@ -1492,7 +1492,7 @@ static u16 *BufferQuestLogData_DefeatedWildMon(u16 *a0, const u16 *eventData)
 {
     u16 *r4 = a0;
     u8 *r5 = (u8 *)a0 + 8;
-    u16 timestamp = gSaveBlock2Ptr->playTimeHours + (60 * gSaveBlock2Ptr->playTimeMinutes);
+    u16 timestamp = (60 * gSaveBlock2Ptr->playTimeHours) + (gSaveBlock2Ptr->playTimeMinutes);
     // DebugPrintf("Writing Defeated Wild Mon Log Data to %x", a0);
     // DebugPrintf("Defeat Wild Mon Data: %x", eventData);
     if (!sub_8110944(r4, sQuestLogEventCmdSizes[QL_EVENT_DEFEATED_WILD_MON]))
@@ -1514,7 +1514,7 @@ static u16 *BufferQuestLogData_DefeatedWildMon(u16 *a0, const u16 *eventData)
 
     sQuestLogEventTextBufferCBs[QL_EVENT_DEFEATED_WILD_MON](r4);
     // DebugPrintf("event text: %S", gStringVar4);
-    DebugPrintf("%d|QUEST|%d|%S", timestamp, QL_EVENT_DEFEATED_WILD_MON, gStringVar4);
+    DebugPrintf("|%d|QUEST|%d|%S", timestamp, QL_EVENT_DEFEATED_WILD_MON, gStringVar4);
     return (u16 *)(r5 + 4);
 }
 
