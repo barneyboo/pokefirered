@@ -214,8 +214,9 @@ static const u16 *(*const sQuestLogEventTextBufferCBs[])(const u16 *) = {
 void SetQuestLogEvent(u16 eventId, const u16 *eventData)
 {
     u16 *r1;
-    // u16 timestamp = gSaveBlock2Ptr->playTimeHours + (60 * gSaveBlock2Ptr->playTimeMinutes);
-    // DebugPrintf("%d|QUEST|%d|%x", timestamp, eventId, eventData);
+    u16 timestamp = (60 * gSaveBlock2Ptr->playTimeHours) + gSaveBlock2Ptr->playTimeMinutes;
+    // log any quests when they first occur so we can add support for them
+    DebugPrintf("%d|qlogInitial|%d|%x", timestamp, eventId, eventData);
     // try calling sQuestLogEventTextBufferCBs with the event buffer to get event text
     // sQuestLogEventTextBufferCBs[eventId](eventData);
     // DebugPrintf("event text: %S", gStringVar4);
@@ -1513,7 +1514,6 @@ static u16 *BufferQuestLogData_DefeatedWildMon(u16 *a0, const u16 *eventData)
     r5[2] = *((const u8 *)eventData + 4);
 
     sQuestLogEventTextBufferCBs[QL_EVENT_DEFEATED_WILD_MON](r4);
-    // DebugPrintf("event text: %S", gStringVar4);
     DebugPrintf("|%d|QUEST|%d|%S", timestamp, QL_EVENT_DEFEATED_WILD_MON, gStringVar4);
     return (u16 *)(r5 + 4);
 }
@@ -1822,20 +1822,27 @@ static const u8 *const sUsedFieldMoveTexts[] =
 static u16 *BufferQuestLogData_DepartedLocation(u16 *a0, const u16 *eventData)
 {
     u16 *r2 = sub_8113DE0(QL_EVENT_DEPARTED, a0);
+    u16 timestamp = (60 * gSaveBlock2Ptr->playTimeHours) + (gSaveBlock2Ptr->playTimeMinutes);
     if (r2 == NULL)
         return NULL;
     *((u8 *)r2 + 0) = *((const u8 *)eventData + 0);
     if ((*((u8 *)r2 + 1) = *((const u8 *)eventData + 1)) == QL_LOCATION_SAFARI_ZONE)
         sEventShouldNotRecordSteps = 1;
+    sQuestLogEventTextBufferCBs[QL_EVENT_DEPARTED](eventData);
+
+    DebugPrintf("|%d|QUEST|%d|%S", timestamp, QL_EVENT_DEPARTED, gStringVar4);
     return r2 + 1;
 }
 
 static const u16 *BufferQuestLogText_DepartedLocation(const u16 *eventData)
 {
+
     u8 r4, locationId;
     const u16 *r5 = sub_8113E88(QL_EVENT_DEPARTED, eventData);
     const u8 *r5_2 = (const u8 *)r5 + 0;
-    locationId = r5_2[1];
+    DebugPrintf("Departed, got event data: %x", eventData);
+    // locationId = r5_2[1];
+    locationId = sLastDepartedMap;
     GetMapNameGeneric(gStringVar1, r5_2[0]);
     StringCopy(gStringVar2, sLocationNameTexts[locationId]);
     if (sLocationToDepartedTextId[locationId] == QL_DEPARTED_GYM)

@@ -58,6 +58,8 @@ static inline char mini_pchar_decode(char encoded)
         ret = encoded - (CHAR_0 - '0'); // numbers
     else if (encoded == CHAR_E_ACUTE || encoded == CHAR_e_ACUTE)
         ret = 'e'; // e-acute
+    else if (encoded == CHAR_ELLIPSIS)
+        ret = '.'; // ellipsis
     else if (encoded == CHAR_NEWLINE)
         ret = ' '; // newline
     else if (encoded == CHAR_SPACE)
