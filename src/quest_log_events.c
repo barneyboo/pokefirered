@@ -1843,7 +1843,8 @@ static const u16 *BufferQuestLogText_DepartedLocation(const u16 *eventData)
     DebugPrintf("Departed, got event data: %x", eventData);
     // locationId = r5_2[1];
     locationId = sLastDepartedMap;
-    GetMapNameGeneric(gStringVar1, r5_2[0]);
+    // GetMapNameGeneric(gStringVar1, r5_2[0]);
+    GetMapNameGeneric(gStringVar1, gMapHeader.regionMapSectionId);
     StringCopy(gStringVar2, sLocationNameTexts[locationId]);
     if (sLocationToDepartedTextId[locationId] == QL_DEPARTED_GYM)
     {

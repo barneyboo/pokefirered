@@ -103,7 +103,7 @@ static void GetCursorCoordsByPos(u8 cursorArea, u8 cursorPosition, u16 *x, u16 *
     {
     case CURSOR_AREA_IN_BOX:
         *x = (cursorPosition % IN_BOX_COLUMNS) * 24 + 100;
-        *y = (cursorPosition / IN_BOX_COLUMNS) * 24 +  32;
+        *y = (cursorPosition / IN_BOX_COLUMNS) * 24 + 32;
         break;
     case CURSOR_AREA_IN_PARTY:
         if (cursorPosition == 0)
@@ -406,7 +406,7 @@ u8 GetSavedCursorPos(void)
 void InitMonPlaceChange(u8 type)
 {
     static bool8 (*const placeChangeFuncs[])(void) = {
-        [CHANGE_GRAB]  = MonPlaceChange_Grab,
+        [CHANGE_GRAB] = MonPlaceChange_Grab,
         [CHANGE_PLACE] = MonPlaceChange_Place,
         [CHANGE_SHIFT] = MonPlaceChange_Shift,
     };
@@ -716,6 +716,7 @@ bool8 TryHideReleaseMon(void)
 void ReleaseMon(void)
 {
     u8 boxId;
+    return;
 
     DestroyReleaseMonIcon();
     if (sIsMonBeingMoved)
@@ -820,8 +821,7 @@ s8 RunCanReleaseMon(void)
         for (i = 0; i < 5; i++)
         {
             knownMoveFlags = GetAndCopyBoxMonDataAt(gStorage->releaseCheckBoxId, gStorage->releaseCheckBoxPos, MON_DATA_KNOWN_MOVES, (u8 *)gStorage->restrictedMoveList);
-            if (knownMoveFlags != 0
-                && !(gStorage->releaseBoxId == gStorage->releaseCheckBoxId && gStorage->releaseBoxPos == gStorage->releaseCheckBoxPos))
+            if (knownMoveFlags != 0 && !(gStorage->releaseBoxId == gStorage->releaseCheckBoxId && gStorage->releaseBoxPos == gStorage->releaseCheckBoxPos))
             {
                 if (knownMoveFlags & 1)
                     gStorage->isSurfMon = FALSE;
@@ -1013,10 +1013,10 @@ static void ReshowDisplayMon(void)
         TrySetDisplayMonData();
 }
 
-#define displayMonNicknameText        displayMonTexts[0]
-#define displayMonSpeciesNameText     displayMonTexts[1]
-#define displayMonGenderAndLevelText  displayMonTexts[2]
-#define displayMonItemNameText        displayMonTexts[3]
+#define displayMonNicknameText displayMonTexts[0]
+#define displayMonSpeciesNameText displayMonTexts[1]
+#define displayMonGenderAndLevelText displayMonTexts[2]
+#define displayMonItemNameText displayMonTexts[3]
 
 static void SetDisplayMonData(void *pokemon, u8 mode)
 {
@@ -1714,11 +1714,10 @@ u8 HandleInput(void)
     {
         u8 (*func)(void);
         s8 area;
-    }
-    static const inputFuncs[] = {
-        {HandleInput_InBox,     CURSOR_AREA_IN_BOX},
-        {HandleInput_InParty,   CURSOR_AREA_IN_PARTY},
-        {HandleInput_BoxTitle,  CURSOR_AREA_BOX_TITLE},
+    } static const inputFuncs[] = {
+        {HandleInput_InBox, CURSOR_AREA_IN_BOX},
+        {HandleInput_InParty, CURSOR_AREA_IN_PARTY},
+        {HandleInput_BoxTitle, CURSOR_AREA_BOX_TITLE},
         {HandleInput_OnButtons, CURSOR_AREA_BUTTONS},
         {NULL, 0},
     };
@@ -1866,13 +1865,11 @@ static void CreateCursorSprites(void)
     struct SpriteSheet spriteSheets[] = {
         {sHandCursorTiles, 0x800, GFXTAG_CURSOR},
         {sHandCursorShadowTiles, 0x80, GFXTAG_CURSOR_SHADOW},
-        {}
-    };
+        {}};
 
     struct SpritePalette spritePalettes[] = {
         {sPokeStorageMisc1Pal, PALTAG_MISC_1},
-        {}
-    };
+        {}};
 
     static const struct OamData sOamData_Cursor = {
         .shape = SPRITE_SHAPE(32x32),
@@ -1888,26 +1885,22 @@ static void CreateCursorSprites(void)
     static const union AnimCmd sAnim_Cursor_Bouncing[] = {
         ANIMCMD_FRAME(0, 30),
         ANIMCMD_FRAME(16, 30),
-        ANIMCMD_JUMP(0)
-    };
+        ANIMCMD_JUMP(0)};
     static const union AnimCmd sAnim_Cursor_Still[] = {
         ANIMCMD_FRAME(0, 5),
-        ANIMCMD_END
-    };
+        ANIMCMD_END};
     static const union AnimCmd sAnim_Cursor_Open[] = {
         ANIMCMD_FRAME(32, 5),
-        ANIMCMD_END
-    };
+        ANIMCMD_END};
     static const union AnimCmd sAnim_Cursor_Fist[] = {
         ANIMCMD_FRAME(48, 5),
-        ANIMCMD_END
-    };
+        ANIMCMD_END};
 
     static const union AnimCmd *const sAnims_Cursor[] = {
         [CURSOR_ANIM_BOUNCE] = sAnim_Cursor_Bouncing,
-        [CURSOR_ANIM_STILL]  = sAnim_Cursor_Still,
-        [CURSOR_ANIM_OPEN]   = sAnim_Cursor_Open,
-        [CURSOR_ANIM_FIST]   = sAnim_Cursor_Fist,
+        [CURSOR_ANIM_STILL] = sAnim_Cursor_Still,
+        [CURSOR_ANIM_OPEN] = sAnim_Cursor_Open,
+        [CURSOR_ANIM_FIST] = sAnim_Cursor_Fist,
     };
 
     static const struct SpriteTemplate sSpriteTemplate_Cursor = {
@@ -1947,7 +1940,6 @@ static void CreateCursorSprites(void)
     }
     else
         gStorage->cursorSprite = NULL;
-
 
     if (sCursorArea == CURSOR_AREA_IN_PARTY)
     {
@@ -2025,44 +2017,44 @@ void TryShowItemAtCursor(void)
 }
 
 static const u8 *const sMenuTexts[] = {
-    [MENU_TEXT_CANCEL]     = gPCText_Cancel,
-    [MENU_TEXT_STORE]      = gPCText_Store,
-    [MENU_TEXT_WITHDRAW]   = gPCText_Withdraw,
-    [MENU_TEXT_MOVE]       = gPCText_Move,
-    [MENU_TEXT_SHIFT]      = gPCText_Shift,
-    [MENU_TEXT_PLACE]      = gPCText_Place,
-    [MENU_TEXT_SUMMARY]    = gPCText_Summary,
-    [MENU_TEXT_RELEASE]    = gPCText_Release,
-    [MENU_TEXT_MARK]       = gPCText_Mark,
-    [MENU_TEXT_JUMP]       = gPCText_Jump,
-    [MENU_TEXT_WALLPAPER]  = gPCText_Wallpaper,
-    [MENU_TEXT_NAME]       = gPCText_Name,
-    [MENU_TEXT_TAKE]       = gPCText_Take,
-    [MENU_TEXT_GIVE]       = gPCText_Give,
-    [MENU_TEXT_GIVE2]      = gPCText_Give,
-    [MENU_TEXT_SWITCH]     = gPCText_Switch,
-    [MENU_TEXT_BAG]        = gPCText_Bag,
-    [MENU_TEXT_INFO]       = gPCText_Info,
-    [MENU_TEXT_SCENERY_1]  = gPCText_Scenery1,
-    [MENU_TEXT_SCENERY_2]  = gPCText_Scenery2,
-    [MENU_TEXT_SCENERY_3]  = gPCText_Scenery3,
-    [MENU_TEXT_ETCETERA]   = gPCText_Etcetera,
-    [MENU_TEXT_FOREST]     = gPCText_Forest,
-    [MENU_TEXT_CITY]       = gPCText_City,
-    [MENU_TEXT_DESERT]     = gPCText_Desert,
-    [MENU_TEXT_SAVANNA]    = gPCText_Savanna,
-    [MENU_TEXT_CRAG]       = gPCText_Crag,
-    [MENU_TEXT_VOLCANO]    = gPCText_Volcano,
-    [MENU_TEXT_SNOW]       = gPCText_Snow,
-    [MENU_TEXT_CAVE]       = gPCText_Cave,
-    [MENU_TEXT_BEACH]      = gPCText_Beach,
-    [MENU_TEXT_SEAFLOOR]   = gPCText_Seafloor,
-    [MENU_TEXT_RIVER]      = gPCText_River,
-    [MENU_TEXT_SKY]        = gPCText_Sky,
-    [MENU_TEXT_POLKADOT]   = gPCText_PolkaDot,
+    [MENU_TEXT_CANCEL] = gPCText_Cancel,
+    [MENU_TEXT_STORE] = gPCText_Store,
+    [MENU_TEXT_WITHDRAW] = gPCText_Withdraw,
+    [MENU_TEXT_MOVE] = gPCText_Move,
+    [MENU_TEXT_SHIFT] = gPCText_Shift,
+    [MENU_TEXT_PLACE] = gPCText_Place,
+    [MENU_TEXT_SUMMARY] = gPCText_Summary,
+    [MENU_TEXT_RELEASE] = gPCText_Release,
+    [MENU_TEXT_MARK] = gPCText_Mark,
+    [MENU_TEXT_JUMP] = gPCText_Jump,
+    [MENU_TEXT_WALLPAPER] = gPCText_Wallpaper,
+    [MENU_TEXT_NAME] = gPCText_Name,
+    [MENU_TEXT_TAKE] = gPCText_Take,
+    [MENU_TEXT_GIVE] = gPCText_Give,
+    [MENU_TEXT_GIVE2] = gPCText_Give,
+    [MENU_TEXT_SWITCH] = gPCText_Switch,
+    [MENU_TEXT_BAG] = gPCText_Bag,
+    [MENU_TEXT_INFO] = gPCText_Info,
+    [MENU_TEXT_SCENERY_1] = gPCText_Scenery1,
+    [MENU_TEXT_SCENERY_2] = gPCText_Scenery2,
+    [MENU_TEXT_SCENERY_3] = gPCText_Scenery3,
+    [MENU_TEXT_ETCETERA] = gPCText_Etcetera,
+    [MENU_TEXT_FOREST] = gPCText_Forest,
+    [MENU_TEXT_CITY] = gPCText_City,
+    [MENU_TEXT_DESERT] = gPCText_Desert,
+    [MENU_TEXT_SAVANNA] = gPCText_Savanna,
+    [MENU_TEXT_CRAG] = gPCText_Crag,
+    [MENU_TEXT_VOLCANO] = gPCText_Volcano,
+    [MENU_TEXT_SNOW] = gPCText_Snow,
+    [MENU_TEXT_CAVE] = gPCText_Cave,
+    [MENU_TEXT_BEACH] = gPCText_Beach,
+    [MENU_TEXT_SEAFLOOR] = gPCText_Seafloor,
+    [MENU_TEXT_RIVER] = gPCText_River,
+    [MENU_TEXT_SKY] = gPCText_Sky,
+    [MENU_TEXT_POLKADOT] = gPCText_PolkaDot,
     [MENU_TEXT_POKECENTER] = gPCText_Pokecenter,
-    [MENU_TEXT_MACHINE]    = gPCText_Machine,
-    [MENU_TEXT_SIMPLE]     = gPCText_Simple,
+    [MENU_TEXT_MACHINE] = gPCText_Machine,
+    [MENU_TEXT_SIMPLE] = gPCText_Simple,
 };
 
 void InitMenu(void)
