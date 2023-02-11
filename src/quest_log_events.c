@@ -2022,11 +2022,15 @@ static const u16 *BufferQuestLogText_SoldItem(const u16 *eventData)
 
 static u16 *BufferQuestLogData_ObtainedItem(u16 *a0, const u16 *eventData)
 {
+    u16 timestamp = (60 * gSaveBlock2Ptr->playTimeHours) + (gSaveBlock2Ptr->playTimeMinutes);
     a0 = sub_8113DE0(QL_EVENT_OBTAINED_ITEM, a0);
     if (a0 == NULL)
         return NULL;
     a0[0] = eventData[0];
     *((u8 *)a0 + 2) = *((const u8 *)eventData + 2);
+    // first 2 bytes: item id
+    sQuestLogEventTextBufferCBs[QL_EVENT_OBTAINED_ITEM](eventData);
+    DebugPrintf("|%d|QUEST|%d|%S", timestamp, QL_EVENT_OBTAINED_ITEM, gStringVar4);
     return a0 + 2;
 }
 
@@ -2034,8 +2038,10 @@ static const u16 *BufferQuestLogText_ObtainedItem(const u16 *eventData)
 {
     const u16 *r4 = sub_8113E88(QL_EVENT_OBTAINED_ITEM, eventData);
     const u8 *r5 = (const u8 *)r4 + 2;
-    GetMapNameGeneric(gStringVar1, r5[0]);
-    StringCopy(gStringVar2, ItemId_GetName(r4[0]));
+    // GetMapNameGeneric(gStringVar1, r5[0]);
+    GetMapNameGeneric(gStringVar1, gMapHeader.regionMapSectionId);
+    // StringCopy(gStringVar2, ItemId_GetName(r4[0]));
+    StringCopy(gStringVar2, ItemId_GetName(eventData[0]));
     StringExpandPlaceholders(gStringVar4, gText_QuestLog_ObtainedItemInLocation);
     return (const u16 *)(r5 + 2);
 }
