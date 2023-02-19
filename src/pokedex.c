@@ -12,9 +12,9 @@ u16 GetPokedexHeightWeight(u16 dexNum, u8 data)
 {
     switch (data)
     {
-    case 0:  // height
+    case 0: // height
         return gPokedexEntries[dexNum].height;
-    case 1:  // weight
+    case 1: // weight
         return gPokedexEntries[dexNum].weight;
     default:
         return 1;
@@ -90,6 +90,10 @@ u16 GetKantoPokedexCount(u8 caseID)
                 count++;
             break;
         }
+    }
+    if (caseID == FLAG_GET_CAUGHT)
+    {
+        DebugPrintf("|POKEDEX|%d", count);
     }
     return count;
 }

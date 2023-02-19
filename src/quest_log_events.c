@@ -809,7 +809,15 @@ static const u16 *BufferQuestLogText_SwitchedPartyOrder(const u16 *eventData)
 
 static u16 *BufferQuestLogData_UsedItem(u16 *a0, const u16 *eventData)
 {
+    //  struct UnkStruct_ItemUseQuestLog
+    // {
+    //     u16 itemId;
+    //     u16 unk2;
+    //     u16 species;
+    //     u16 param;
+    // }
     u16 *r2 = sub_8113DE0(QL_EVENT_USED_ITEM, a0);
+    u16 timestamp = (60 * gSaveBlock2Ptr->playTimeHours) + (gSaveBlock2Ptr->playTimeMinutes);
     if (r2 == NULL)
         return NULL;
 
@@ -820,13 +828,18 @@ static u16 *BufferQuestLogData_UsedItem(u16 *a0, const u16 *eventData)
     if (eventData[0] == ITEM_ESCAPE_ROPE)
         sEventShouldNotRecordSteps = 2;
 
+    DebugPrintf("Used item %x", r2[0]);
+    sQuestLogEventTextBufferCBs[QL_EVENT_USED_ITEM](r2);
+    DebugPrintf("|%d|QUEST|%d|%S", timestamp, QL_EVENT_USED_ITEM, gStringVar4);
+
     return r2 + 3;
 }
 
 static const u16 *BufferQuestLogText_UsedItem(const u16 *eventData)
 {
-    const u16 *r5 = sub_8113E88(QL_EVENT_USED_ITEM, eventData);
-
+    // const u16 *r5 = sub_8113E88(QL_EVENT_USED_ITEM, eventData);
+    const u16 *r5 = eventData;
+    DebugPrintf("Used item %x (event data at %x)", r5[0], eventData);
     switch (ItemId_GetPocket(r5[0]))
     {
     case POCKET_ITEMS:
